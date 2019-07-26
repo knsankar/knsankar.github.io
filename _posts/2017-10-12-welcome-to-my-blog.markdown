@@ -4,11 +4,11 @@ date:   2017-10-12 15:04:23
 categories: misc
 tags: misc
 ---
-Hello Guys,
 
+Hello Guys, 
 I am excited to start a blog and ramble about things :)
 
-
+I will write something soon ;)
 
 Checkout my social media presences [twitter] , [facebook], [LinkedIn]
 
