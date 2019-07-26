@@ -10,7 +10,7 @@ I am excited to start a blog and ramble about things :)
 
 I will write something soon ;)
 
-Checkout my social media presences [twitter] , [facebook], [LinkedIn]
+Checkout my social media presences in [twitter] , [facebook], [LinkedIn]
 
 [twitter]:      http://twitter.com/knsankar
 [facebook]:   https://fb.com/navaneethasankar
