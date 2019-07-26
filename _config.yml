@@ -40,5 +40,5 @@ kramdown:
   hard_wrap: false
 
 #gems: ['jekyll-paginate']
-plugins: ['jekyll-paginate', 'jekyll-seo-tag']
+plugins: ['jekyll-paginate']
 exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']
