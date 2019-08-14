@@ -7,11 +7,7 @@ tags: postgresql, db, database
 
 I needed to increase the length of a column without any change in data. I went through stackoverflow as usual :) and found a old article by [sniptools](https://sniptools.com/databases/resize-a-column-in-a-postgresql-table-without-changing-data/) .
 
-<br />
-
 The original article was writen in 2009 and few things has to be changed.
-
-<br />
 
 TL;DR
 
@@ -42,13 +38,7 @@ attypmod
 ```
 
 
-<br />
-
-
 This means that the column current size is 30 (4 was added for a legacy reason it seems.)
-
-
-<br />
 
 
 Now we can change it to ***varchar(40)*** by executing the following query.
