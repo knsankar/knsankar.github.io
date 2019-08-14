@@ -21,7 +21,7 @@ In the below example table name is TAB1 and the column that we want to alter is 
 
 To check the existing size, simply run the following query.
 
-``` postgresql
+```
 
 SELECT atttypmod FROM pg_catalog.pg_attribute 
 WHERE attrelid = 'TAB1'::regclass 
