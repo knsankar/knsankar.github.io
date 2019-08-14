@@ -45,7 +45,6 @@ This means that the column current size is 30 (4 was added for a legacy reason i
 Now we can change it to ***varchar(40)*** by executing the following query.
 
 
-
 ```
 UPDATE pg_catalog.pg_attribute SET atttypmod = 40+4
 WHERE attrelid = 'TAB1'::regclass
