@@ -57,7 +57,7 @@ Now we can change it to ***varchar(40)*** by executing the following query.
 <br />
 
 
-``` postgresql
+```
 UPDATE pg_catalog.pg_attribute SET atttypmod = 40+4
 WHERE attrelid = 'TAB1'::regclass
 AND attname = 'COL1';
