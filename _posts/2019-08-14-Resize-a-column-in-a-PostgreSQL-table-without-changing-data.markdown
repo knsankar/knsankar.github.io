@@ -40,11 +40,10 @@ attypmod
 
 This means that the column current size is 30 (4 was added for a legacy reason it seems.)
 
+<br />
 
 Now we can change it to ***varchar(40)*** by executing the following query.
 
-
-<br />
 
 
 ```
