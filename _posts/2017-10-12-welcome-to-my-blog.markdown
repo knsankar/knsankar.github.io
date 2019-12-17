@@ -1,5 +1,5 @@
 ---
-title:  "Hello World!"
+title:  "New Blog!!"
 date:   2017-10-12 15:04:23
 categories: misc
 tags: misc
