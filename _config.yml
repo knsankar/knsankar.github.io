@@ -1,9 +1,9 @@
 # main text of home
-name: John Doe
-bio: A Man who travels the world eating noodles
+name: Navaneetha Sankar K
+bio: Hacker | Film Fanatic | Book Worm | Blogger
 
 # twitter summary info
-description: A blog about technology and stuff related
+description: A security blog
 
 # if it's an external image, update below for true
 # better with square images
@@ -16,7 +16,7 @@ resume: true
 resume-external: true
 resume-url: https://google.com/?q=my+resume
 
-url: https://sergiokopplin.github.io/indigo
+url: https://knsankar.github.io
 # your url: https://USERNAME.github.io
 
 permalink: /:title/
@@ -41,7 +41,7 @@ twitter: mytwitter
 # linkedin: mylinkedin
 # youtube: myyoutube
 # spotify: myspotify
-github: mygithub
+github: knsankar
 # gitlab: mygitlab
 # lastfm: mylastfm
 # stackoverflow: 7044681/mystackoverflow
