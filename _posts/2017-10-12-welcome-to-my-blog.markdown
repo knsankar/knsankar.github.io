@@ -3,9 +3,13 @@ title:  "New Blog!!"
 date:   2017-10-12 15:04:23
 categories: misc
 tags: misc
+layout: post
+category: blog
+headerImage: false
+author: Navaneetha Sankar
 ---
 
-Hello Guys, 
+Hello Guys,
 I am excited to start a blog and ramble about things :)
 
 I will write something soon ;)
