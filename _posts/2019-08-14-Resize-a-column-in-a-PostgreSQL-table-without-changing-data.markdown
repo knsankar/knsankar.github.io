@@ -2,6 +2,7 @@
 title:  "Resize a column in a PostgreSQL table without changing data"
 date:   2019-08-14 14:23:09
 categories: postgresql
+layout: post
 tags: postgresql, db, database
 ---
 
@@ -19,8 +20,8 @@ To check the existing size, simply run the following query.
 
 ```
 
-SELECT atttypmod FROM pg_catalog.pg_attribute 
-WHERE attrelid = 'TAB1'::regclass 
+SELECT atttypmod FROM pg_catalog.pg_attribute
+WHERE attrelid = 'TAB1'::regclass
 AND attname = 'COL1';
 
 ```
@@ -29,7 +30,7 @@ AND attname = 'COL1';
 <br />
 
 
-The sample result is 
+The sample result is
 
 ```
 attypmod
