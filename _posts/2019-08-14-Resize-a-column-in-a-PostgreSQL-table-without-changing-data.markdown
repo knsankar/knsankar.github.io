@@ -4,6 +4,7 @@ date:   2019-08-14 14:23:09
 categories: postgresql
 layout: post
 category: blog
+headerImage: false
 author: Navaneetha Sankar
 description: Resize a column in a PostgreSQL table without changing data
 tags: postgresql, db, database
