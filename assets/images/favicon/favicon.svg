@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="CRT monitor">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f74c9"/>
+      <stop offset="1" stop-color="#0d3f86"/>
+    </linearGradient>
+  </defs>
+
+  <!-- stand -->
+  <rect x="8" y="24" width="16" height="4" fill="#000000"/>
+  <rect x="9" y="25" width="14" height="2" fill="#c0c0c0"/>
+
+  <!-- casing (raised bevel) -->
+  <rect x="4" y="4" width="24" height="20" fill="#000000"/>
+  <rect x="5" y="5" width="22" height="18" fill="#c0c0c0"/>
+  <rect x="5" y="5" width="22" height="2" fill="#ffffff"/>
+  <rect x="5" y="5" width="2" height="18" fill="#ffffff"/>
+  <rect x="5" y="21" width="22" height="2" fill="#808080"/>
+  <rect x="25" y="5" width="2" height="18" fill="#808080"/>
+
+  <!-- screen bezel (sunken bevel) -->
+  <rect x="8" y="8" width="16" height="12" fill="#808080"/>
+  <rect x="8" y="18" width="16" height="2" fill="#ffffff"/>
+  <rect x="22" y="8" width="2" height="12" fill="#ffffff"/>
+
+  <!-- screen: the "Clouds" sky -->
+  <rect x="10" y="10" width="12" height="8" fill="url(#sky)"/>
+
+  <!-- cloud -->
+  <g fill="#ffffff" opacity="0.92">
+    <circle cx="13.5" cy="13" r="2"/>
+    <circle cx="16.5" cy="12.2" r="2.4"/>
+    <circle cx="19.2" cy="13" r="1.7"/>
+    <rect x="13" y="13" width="6.5" height="2"/>
+  </g>
+
+  <!-- far cloud -->
+  <g fill="#ffffff" opacity="0.5">
+    <circle cx="19" cy="15.6" r="1.2"/>
+    <circle cx="20.6" cy="15.6" r="0.9"/>
+    <rect x="18" y="15.6" width="3.4" height="1.1"/>
+  </g>
+
+  <!-- glass glare -->
+  <path d="M10 10 L14 10 L10 14 Z" fill="#ffffff" opacity="0.18"/>
+</svg>
