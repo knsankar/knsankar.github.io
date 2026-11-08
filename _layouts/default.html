@@ -333,14 +333,13 @@ layout: compress
               grip.addEventListener("pointerdown", function (e) {
                 if (e.button !== 0 || state === "maximized") return;
                 var r = win.getBoundingClientRect();
-                var parent = win.parentElement;
-                var cs = parent ? window.getComputedStyle(parent) : null;
                 resizing = true;
                 sx = e.clientX; sy = e.clientY;
                 w0 = r.width; h0 = r.height;
-                /* widest the window may grow: its container's content box */
-                maxW = (parent ? parent.clientWidth : window.innerWidth)
-                  - (cs ? (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) : 0);
+                /* widest the window may grow: from its own left edge out to the
+                   viewport's right edge, so it is not capped by the narrower
+                   .wrap container it sits in */
+                maxW = Math.max(MIN_W, window.innerWidth - 8 - r.left);
                 win.classList.add("window--sized", "window--resizing");
                 grip.setPointerCapture(e.pointerId);
                 e.preventDefault();
