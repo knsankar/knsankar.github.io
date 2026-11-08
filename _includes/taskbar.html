@@ -16,10 +16,7 @@
   </details>
 
   <div class="tasks">
-    <a class="task" href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>Home</span></a>
-    <a class="task" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog/' %} aria-current="page"{% endif %}><span>Blog</span></a>
-    <a class="task" href="{{ '/tags/' | relative_url }}"{% if page.url contains '/tags/' %} aria-current="page"{% endif %}><span>Tags</span></a>
-    <button type="button" class="task task--window" id="tamil-task" aria-pressed="false"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>தமிழ்</span></button>
+    <button type="button" class="task task--window" id="tamil-task" aria-pressed="false" hidden><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>தமிழ்</span></button>
   </div>
 
   <div class="tray">

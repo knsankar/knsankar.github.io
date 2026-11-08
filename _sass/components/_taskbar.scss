@@ -143,7 +143,6 @@
   flex-shrink: 0;
 }
 
-.task[aria-current="page"],
 .task--active {
   font-weight: 700;
   @include bevel-sunken;
@@ -156,6 +155,11 @@
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+}
+
+/* a task for a closed window stays out of the bar ("display" beats [hidden]) */
+.task[hidden] {
+  display: none;
 }
 
 /* ---- tray ---- */
@@ -184,4 +188,156 @@
   .task {
     max-width: 96px;
   }
+}
+
+/* ============================================================
+   context menu — the custom right-click menus
+   ============================================================ */
+
+.ctx-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  min-width: 176px;
+  max-height: calc(100vh - 8px);
+  overflow: auto;
+  padding: 3px;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .82rem;
+  @include bevel-raised;
+}
+
+.ctx-menu[hidden] {
+  display: none;
+}
+
+.ctx-menu__item {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 4px 22px 4px 26px;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.ctx-menu__item--bold {
+  font-weight: 700;
+}
+
+/* the check column (Win95 menu radio/check bullet) */
+.ctx-menu__mark {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 12px;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.ctx-menu__item:hover:not(:disabled),
+.ctx-menu__item:focus-visible {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+  outline: none;
+}
+
+.ctx-menu__item:disabled {
+  color: var(--bevel-shadow);
+  text-shadow: 1px 1px var(--bevel-light);
+}
+
+.ctx-menu__sep {
+  height: 0;
+  margin: 3px 2px;
+  border-top: 1px solid var(--bevel-shadow);
+  border-bottom: 1px solid var(--bevel-light);
+}
+
+/* ============================================================
+   Display Properties — the dialog behind the desktop menu's
+   "Properties" item (single, self-contained modal)
+   ============================================================ */
+
+.props {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 9000;
+  width: min(340px, calc(100vw - 32px));
+  transform: translate(-50%, -50%);
+  padding: 3px;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .82rem;
+  @include bevel-raised;
+}
+
+.props[hidden] {
+  display: none;
+}
+
+.props .titlebar {
+  cursor: default;
+}
+
+.props__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin: 3px 0;
+  padding: var(--sp-4);
+  background: var(--win-bg);
+  color: var(--win-text);
+  @include bevel-sunken;
+}
+
+.props__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0;
+}
+
+.props__swatch {
+  width: 104px;
+  height: 42px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  @include bevel-field;
+}
+
+.props__group {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border: 0;
+  @include bevel-groove;
+}
+
+.props__group legend {
+  padding: 0 4px;
+  font-weight: 700;
+}
+
+.props__opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.props__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-2);
+  padding: 2px 2px 4px;
 }

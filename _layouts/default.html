@@ -66,34 +66,67 @@ layout: compress
     {% include taskbar.html %}
     {% include icons.html %}
 
+    {% comment %} custom right-click menu (populated by JS, per surface) {% endcomment %}
+    <div class="ctx-menu" data-ctx-menu hidden role="menu" aria-label="Context menu"></div>
+
+    {% comment %} Display Properties — opened from the desktop / taskbar menus {% endcomment %}
+    <div class="props" data-display-props hidden role="dialog" aria-labelledby="props-title">
+      <div class="titlebar">
+        <svg class="titlebar__icon" aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>
+        <span class="titlebar__title" id="props-title">Display Properties</span>
+        <span class="titlebar__btns">
+          <button type="button" class="win-btn" data-props="close" aria-label="Close" title="Close">&#10005;</button>
+        </span>
+      </div>
+      <div class="props__body">
+        <p class="props__row">
+          <span class="props__swatch" aria-hidden="true"></span>
+          <span>Background:<br>Clouds</span>
+        </p>
+        <fieldset class="props__group">
+          <legend>Appearance</legend>
+          <label class="props__opt"><input type="radio" name="props-theme" value="light"> Windows Standard</label>
+          <label class="props__opt"><input type="radio" name="props-theme" value="dark"> High Contrast</label>
+        </fieldset>
+      </div>
+      <div class="props__actions">
+        <button type="button" class="btn" data-props="ok">OK</button>
+        <button type="button" class="btn" data-props="close">Cancel</button>
+      </div>
+    </div>
+
     <script>
       (function () {
         var root = document.documentElement;
 
-        /* ---- theme toggle ---- */
-        var btn = document.getElementById("theme-toggle");
-        if (btn) {
+        /* ---- theme (shared by the toggle, the desktop menu and Properties) ---- */
+        function currentTheme() {
+          var t = root.getAttribute("data-theme");
+          if (t) return t;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        function syncThemeUI() {
+          var btn = document.getElementById("theme-toggle");
+          if (!btn) return;
           var label = document.getElementById("theme-toggle-label");
           var icon = document.getElementById("theme-toggle-icon");
-          function current() {
-            var t = root.getAttribute("data-theme");
-            if (t) return t;
-            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-          }
-          function sync() {
-            var c = current();
-            label.textContent = c === "dark" ? "Dark" : "Light";
-            icon.textContent = c === "dark" ? "\u263E" : "\u2600";
-            btn.setAttribute("aria-pressed", c === "dark" ? "true" : "false");
-          }
-          btn.addEventListener("click", function () {
-            var next = current() === "dark" ? "light" : "dark";
-            root.setAttribute("data-theme", next);
-            try { localStorage.setItem("win95-theme", next); } catch (e) {}
-            sync();
-          });
-          sync();
+          var c = currentTheme();
+          if (label) label.textContent = c === "dark" ? "Dark" : "Light";
+          if (icon) icon.textContent = c === "dark" ? "\u263E" : "\u2600";
+          btn.setAttribute("aria-pressed", c === "dark" ? "true" : "false");
         }
+        function setTheme(name, persist) {
+          root.setAttribute("data-theme", name);
+          if (persist) { try { localStorage.setItem("win95-theme", name); } catch (e) {} }
+          syncThemeUI();
+        }
+        var themeBtn = document.getElementById("theme-toggle");
+        if (themeBtn) {
+          themeBtn.addEventListener("click", function () {
+            setTheme(currentTheme() === "dark" ? "light" : "dark", true);
+          });
+        }
+        syncThemeUI();
 
         /* ---- taskbar clock ---- */
         var clock = document.getElementById("clock");
@@ -119,6 +152,18 @@ layout: compress
           document.addEventListener("click", function (e) {
             if (!start.contains(e.target)) start.removeAttribute("open");
           });
+        }
+
+        /* ---- shared window registry (so the context menus can drive windows) ---- */
+        var winApis = [];
+        var taskApis = [];
+        function apiForWindow(el) {
+          for (var i = 0; i < winApis.length; i++) if (winApis[i].el === el) return winApis[i].api;
+          return null;
+        }
+        function apiForTask(el) {
+          for (var i = 0; i < taskApis.length; i++) if (taskApis[i].el === el) return taskApis[i].api;
+          return null;
         }
 
         /* ---- desktop window manager (drag / minimize / maximize / close) ---- */
@@ -155,11 +200,20 @@ layout: compress
             var tx = 0, ty = 0;
 
             function showTask() {
-              if (!ownsTask || !tasks || (task && task.parentNode)) return;
-              tasks.insertBefore(task, tasks.firstChild);
+              if (!task) return;
+              if (ownsTask) {
+                if (tasks && !task.parentNode) tasks.insertBefore(task, tasks.firstChild);
+              } else {
+                task.hidden = false;
+              }
             }
             function hideTask() {
-              if (ownsTask && task && task.parentNode) task.parentNode.removeChild(task);
+              if (!task) return;
+              if (ownsTask) {
+                if (task.parentNode) task.parentNode.removeChild(task);
+              } else {
+                task.hidden = true;
+              }
             }
             function raise() {
               win.style.zIndex = String(++zTop);
@@ -319,7 +373,10 @@ layout: compress
 
             apply();
 
-            registry[id] = {
+            var api = {
+              el: win,
+              getState: function () { return state; },
+              setState: function (s) { state = s; apply(); },
               open: function () {
                 state = "normal";
                 tx = 0; ty = 0;
@@ -327,6 +384,9 @@ layout: compress
                 apply();
               }
             };
+            registry[id] = api;
+            winApis.push({ el: win, api: api });
+            if (task) taskApis.push({ el: task, api: api });
           });
 
           /* launchers (Start menu items / desktop shortcuts) */
@@ -338,6 +398,210 @@ layout: compress
               if (startMenu) startMenu.removeAttribute("open");
             });
           });
+        })();
+
+        /* ---- Display Properties dialog ---- */
+        var openDisplayProps = function () {};
+        (function () {
+          var dlg = document.querySelector("[data-display-props]");
+          if (!dlg) return;
+          var radios = Array.prototype.slice.call(dlg.querySelectorAll("input[name='props-theme']"));
+          var original = null;
+
+          function close() { dlg.hidden = true; }
+          function cancel() {
+            if (original) setTheme(original, true);
+            close();
+          }
+
+          dlg.addEventListener("click", function (e) {
+            var act = e.target.closest("[data-props]");
+            if (!act) return;
+            if (act.getAttribute("data-props") === "close") cancel(); else close();
+          });
+          dlg.addEventListener("change", function (e) {
+            if (e.target && e.target.name === "props-theme") setTheme(e.target.value, true);
+          });
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !dlg.hidden) cancel();
+          });
+
+          openDisplayProps = function () {
+            original = currentTheme();
+            radios.forEach(function (r) { r.checked = (r.value === original); });
+            dlg.hidden = false;
+          };
+        })();
+
+        /* ---- custom right-click context menus ---- */
+        (function () {
+          var menuEl = document.querySelector("[data-ctx-menu]");
+          if (!menuEl) return;
+          var isOpen = false;
+
+          function closeMenu() {
+            if (!isOpen) return;
+            isOpen = false;
+            menuEl.hidden = true;
+            menuEl.innerHTML = "";
+            document.removeEventListener("pointerdown", onOutside, true);
+            document.removeEventListener("keydown", onKey, true);
+            window.removeEventListener("resize", closeMenu);
+            window.removeEventListener("scroll", closeMenu, true);
+          }
+          function onOutside(e) { if (!menuEl.contains(e.target)) closeMenu(); }
+          function onKey(e) { if (e.key === "Escape") closeMenu(); }
+
+          function buildItem(it) {
+            if (it.sep) {
+              var sep = document.createElement("div");
+              sep.className = "ctx-menu__sep";
+              return sep;
+            }
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.setAttribute("role", "menuitem");
+            btn.className = "ctx-menu__item" + (it.bold ? " ctx-menu__item--bold" : "");
+            if (it.disabled) {
+              btn.disabled = true;
+            } else {
+              btn.addEventListener("click", function () {
+                closeMenu();
+                if (it.run) it.run();
+              });
+            }
+            if (it.check) {
+              var mark = document.createElement("span");
+              mark.className = "ctx-menu__mark";
+              mark.textContent = "\u2022";
+              btn.appendChild(mark);
+            }
+            btn.appendChild(document.createTextNode(it.label));
+            return btn;
+          }
+
+          function showMenu(x, y, items) {
+            closeMenu();
+            items.forEach(function (it) { menuEl.appendChild(buildItem(it)); });
+            menuEl.hidden = false;
+            var r = menuEl.getBoundingClientRect();
+            var vw = window.innerWidth, vh = window.innerHeight;
+            if (x + r.width > vw - 4) x = Math.max(4, vw - r.width - 4);
+            if (y + r.height > vh - 4) y = Math.max(4, vh - r.height - 4);
+            menuEl.style.left = x + "px";
+            menuEl.style.top = y + "px";
+            isOpen = true;
+            document.addEventListener("pointerdown", onOutside, true);
+            document.addEventListener("keydown", onKey, true);
+            window.addEventListener("resize", closeMenu);
+            window.addEventListener("scroll", closeMenu, true);
+          }
+
+          function themeItems() {
+            var t = currentTheme();
+            return [
+              { label: "Windows Standard", check: t === "light", run: function () { setTheme("light", true); } },
+              { label: "High Contrast", check: t === "dark", run: function () { setTheme("dark", true); } }
+            ];
+          }
+
+          function arrangeIcons() {
+            var box = document.querySelector(".desk-icons");
+            if (!box) return;
+            var items = Array.prototype.slice.call(box.children);
+            items.sort(function (a, b) {
+              var la = a.querySelector(".desktop-icon__label");
+              var lb = b.querySelector(".desktop-icon__label");
+              return (la ? la.textContent : "").localeCompare(lb ? lb.textContent : "", undefined, { sensitivity: "base" });
+            });
+            items.forEach(function (el) { box.appendChild(el); });
+          }
+
+          function refreshDesktop() { setTheme(currentTheme(), false); tick(); }
+
+          function minimizeAll() {
+            winApis.forEach(function (w) {
+              var s = w.api.getState();
+              if (s === "normal" || s === "maximized") w.api.setState("minimized");
+            });
+          }
+
+          function desktopMenu() {
+            return [
+              { label: "Arrange Icons", run: arrangeIcons },
+              { label: "Refresh", run: refreshDesktop },
+              { sep: true }
+            ].concat(themeItems(), [
+              { sep: true },
+              { label: "Properties", run: function () { openDisplayProps(); } }
+            ]);
+          }
+
+          function windowMenu(api) {
+            var s = api.getState();
+            return [
+              { label: "Restore", disabled: s === "normal", run: function () { api.setState("normal"); } },
+              { label: "Minimize", run: function () { api.setState("minimized"); } },
+              { label: "Maximize", disabled: s === "maximized", run: function () { api.setState("maximized"); } },
+              { sep: true },
+              { label: "Close", bold: true, run: function () { api.setState("closed"); } }
+            ];
+          }
+
+          function taskWindowMenu(api) {
+            var s = api.getState();
+            return [
+              { label: "Restore", bold: true, disabled: s === "normal", run: function () { api.setState("normal"); } },
+              { label: "Minimize", run: function () { api.setState("minimized"); } },
+              { sep: true },
+              { label: "Close", run: function () { api.setState("closed"); } }
+            ];
+          }
+
+          function linkMenu(el) {
+            var items = [{ label: "Open", bold: true, run: function () { el.click(); } }];
+            if (el.getAttribute("href")) {
+              items.push({ label: "Open in New Tab", run: function () { window.open(el.href, "_blank", "noopener"); } });
+            }
+            return items;
+          }
+
+          function taskbarMenu() {
+            return [
+              { label: "Minimize All Windows", run: minimizeAll },
+              { sep: true },
+              { label: "Display Properties", run: function () { openDisplayProps(); } }
+            ];
+          }
+
+          document.addEventListener("contextmenu", function (e) {
+            var t = e.target;
+            if (!t || !t.closest) return;
+
+            var taskWin = t.closest(".task--window");
+            var task = t.closest(".task");
+            var taskbar = t.closest(".taskbar");
+            var deskIcon = t.closest(".desktop-icon");
+            var titlebar = t.closest(".titlebar");
+            var winEl = t.closest("[data-window]");
+            var chrome = t.closest(".window, .taskbar, .props, .ctx-menu");
+
+            if (taskWin) {
+              var ta = apiForTask(taskWin);
+              if (ta) { e.preventDefault(); showMenu(e.clientX, e.clientY, taskWindowMenu(ta)); return; }
+            }
+            if (task) { e.preventDefault(); showMenu(e.clientX, e.clientY, linkMenu(task)); return; }
+            if (taskbar) { e.preventDefault(); showMenu(e.clientX, e.clientY, taskbarMenu()); return; }
+            if (deskIcon) { e.preventDefault(); showMenu(e.clientX, e.clientY, linkMenu(deskIcon)); return; }
+            if (titlebar && winEl) {
+              var wa = apiForWindow(winEl);
+              if (wa) { e.preventDefault(); showMenu(e.clientX, e.clientY, windowMenu(wa)); return; }
+            }
+            if (!chrome) { e.preventDefault(); showMenu(e.clientX, e.clientY, desktopMenu()); return; }
+
+            /* content / native areas: leave the browser menu alone, just dismiss ours */
+            closeMenu();
+          }, false);
         })();
       })();
     </script>
