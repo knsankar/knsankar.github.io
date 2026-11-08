@@ -1,0 +1,179 @@
+/* ============================================================
+   taskbar — Start button + menu, task buttons, tray
+   ============================================================ */
+
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  height: var(--taskbar-h);
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  padding: 3px;
+  background: var(--face);
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  @include bevel-raised;
+}
+
+/* ---- Start button ---- */
+.start {
+  position: relative;
+  display: flex;
+}
+
+.start > summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  font-weight: 700;
+  color: var(--win-text);
+  background: var(--face);
+  @include bevel-raised;
+}
+
+.start > summary::-webkit-details-marker {
+  display: none;
+}
+
+.start[open] > summary {
+  @include bevel-sunken;
+}
+
+.start__flag {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ---- Start menu ---- */
+.start__menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 2px);
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  background: var(--face);
+  @include bevel-raised;
+}
+
+.start__menu a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  color: var(--win-text);
+  text-decoration: none;
+  font-size: .82rem;
+}
+
+.start__menu a:hover,
+.start__menu a:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.start__menu svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.start__menu hr {
+  border: 0;
+  border-top: 1px solid var(--bevel-shadow);
+  border-bottom: 1px solid var(--bevel-light);
+  margin: 3px 2px;
+}
+
+/* ---- task buttons ---- */
+.tasks {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tasks::-webkit-scrollbar {
+  display: none;
+}
+
+.task {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 168px;
+  padding: 4px 10px;
+  background: var(--face);
+  color: var(--win-text);
+  font-size: .8rem;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  @include bevel-raised;
+}
+
+.task:hover,
+.task:focus {
+  background: var(--face);
+  color: var(--win-text);
+}
+
+.task svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.task[aria-current="page"],
+.task--active {
+  font-weight: 700;
+  @include bevel-sunken;
+  background-image: repeating-linear-gradient(45deg, var(--bevel-face) 0 1px, var(--face) 1px 2px);
+}
+
+/* window task button (appears while the page window is open) */
+.task--window {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+/* ---- tray ---- */
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  background: var(--face);
+  @include bevel-field;
+}
+
+.clock {
+  min-width: 54px;
+  text-align: center;
+  font-size: .78rem;
+  color: var(--win-text);
+}
+
+@media (max-width: 520px) {
+  .task span,
+  .start__label {
+    display: none;
+  }
+
+  .task {
+    max-width: 96px;
+  }
+}

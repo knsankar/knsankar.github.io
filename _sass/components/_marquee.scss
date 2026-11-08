@@ -1,0 +1,41 @@
+/* ============================================================
+   marquee — the classic top-of-desktop scrolling strip
+   ============================================================ */
+
+.marquee {
+  margin: 6px 6px 0;
+  padding: 3px 0;
+  background: var(--face);
+  overflow: hidden;
+  position: relative;
+  z-index: 20;
+  @include bevel-field;
+}
+
+.marquee__track {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee span {
+  font-family: var(--font-ui);
+  font-size: .76rem;
+  color: var(--win-text);
+  padding-left: var(--sp-6);
+}
+
+.marquee span i {
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}

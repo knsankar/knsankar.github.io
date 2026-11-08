@@ -4,10 +4,13 @@ date:   2019-08-14 14:23:09
 categories: postgresql
 layout: post
 category: blog
-headerImage: false
 author: knsankar
-description: Resize a column in a PostgreSQL table without changing data
-tags: postgresql, db, database
+description: How to grow a varchar column in place by editing pg_attribute.atttypmod, without a full table rewrite.
+summary: To grow a varchar(n) column in place, update pg_attribute.atttypmod to n + 4 for the target column instead of running a full table rewrite. The +4 is a legacy offset Postgres stores for the length.
+tags:
+  - postgresql
+  - db
+  - database
 ---
 
 I needed to increase the length of a column without any change in data. I went through stackoverflow as usual :) and found a old article by [sniptools](https://sniptools.com/databases/resize-a-column-in-a-postgresql-table-without-changing-data/) .

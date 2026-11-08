@@ -1,0 +1,105 @@
+/* ============================================================
+   post
+   ============================================================ */
+
+.post-head {
+  margin: 0 0 var(--sp-5);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--bevel-face);
+}
+
+.post-head h1 {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--step-3);
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  font-family: var(--font-ui);
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+
+/* TL;DR / summary group box */
+.summary {
+  position: relative;
+  margin: 0 0 var(--sp-6);
+  padding: var(--sp-5);
+  background: var(--win-bg);
+  border: 1px solid var(--bevel-shadow);
+  @include bevel-groove;
+}
+
+.summary__label {
+  position: absolute;
+  top: -.72em;
+  left: var(--sp-4);
+  padding: 0 6px;
+  background: var(--win-bg);
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--win-text);
+}
+
+.summary p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* prose body */
+.prose {
+  max-width: 66ch;
+  margin-inline: auto;
+}
+
+.prose h2 {
+  margin-top: var(--sp-7);
+}
+
+.prose code {
+  background: var(--face);
+  padding: 1px 5px;
+  font-size: .88em;
+}
+
+.prose pre {
+  margin: 0 0 var(--sp-6);
+  padding: var(--sp-4);
+  background: var(--dos-bg);
+  color: var(--dos-text);
+  font-size: .85rem;
+  line-height: 1.6;
+  overflow: auto;
+  @include bevel-sunken;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.prose img {
+  margin: var(--sp-5) 0;
+}
+
+/* prev / next */
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin: var(--sp-7) 0;
+}
+
+.pager a {
+  max-width: 48%;
+  white-space: normal;
+  text-align: left;
+}
+
+.pager a + a {
+  text-align: right;
+}

@@ -1,0 +1,34 @@
+/* ============================================================
+   visitor counter — ornamental LED odometer
+   ============================================================ */
+
+.counter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+.counter__digits {
+  display: inline-flex;
+  gap: 1px;
+  padding: 1px;
+  background: var(--bevel-dark);
+  @include bevel-sunken;
+}
+
+.counter__digit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 20px;
+  background: var(--dos-bg);
+  color: #33ff33;
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  font-weight: 700;
+}

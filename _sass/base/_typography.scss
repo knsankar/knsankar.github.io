@@ -1,0 +1,82 @@
+/* ============================================================
+   typography — 90s MS faces, classic web links
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.25;
+  color: var(--win-text);
+  margin: 0 0 var(--sp-4);
+}
+
+h1 { font-size: var(--step-3); }
+h2 { font-size: var(--step-2); }
+h3 { font-size: var(--step-1); }
+h4 { font-size: 1.05rem; }
+h5,
+h6 { font-size: 1rem; }
+
+p {
+  margin: 0 0 var(--sp-5);
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:visited {
+  color: var(--link-visited);
+}
+
+a:hover,
+a:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+  text-decoration-color: transparent;
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+}
+
+/* Win95 groove rule */
+hr {
+  border: 0;
+  border-top: 1px solid var(--bevel-shadow);
+  border-bottom: 1px solid var(--bevel-light);
+  margin: var(--sp-7) 0;
+}
+
+blockquote {
+  margin: 0 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--win-bg);
+  color: var(--text-muted);
+  @include bevel-field;
+}
+
+ul,
+ol {
+  padding-left: 1.25em;
+}
+
+li {
+  margin-bottom: .35em;
+}

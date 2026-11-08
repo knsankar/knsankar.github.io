@@ -1,6 +1,6 @@
-<div class="item {% if post.star %}star{% endif %}">
-    <a class="url" href="{{ site.url }}{{ post.url }}">
-        <aside class="date"><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside>
-        <h3 class="title">{{ post.title }}</h3>
-    </a>
-</div>
+<li>
+  <a href="{{ post.url | relative_url }}">
+    <span class="post-row__date">{{ post.date | date: "%Y-%m-%d" }}</span>
+    <span class="post-row__title">{{ post.title }}{% if site.read-time %} <span class="post-row__meta">{% include read-time.html content=post.content %}</span>{% endif %}</span>
+  </a>
+</li>

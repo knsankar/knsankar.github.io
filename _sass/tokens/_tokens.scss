@@ -1,0 +1,147 @@
+/* ============================================================
+   Windows 95/98 "Chicago" — design tokens
+   The classic silver/teal desktop is the default; the dark
+   variant is a Win95 High-Contrast desktop, opted into via the
+   toggle or the OS setting when no explicit choice was made.
+   ============================================================ */
+
+/* ---- bevels (pure CSS, no images) ------------------------- */
+
+@mixin bevel-raised {
+  box-shadow:
+    inset -1px -1px var(--bevel-dark),
+    inset 1px 1px var(--bevel-light),
+    inset -2px -2px var(--bevel-shadow),
+    inset 2px 2px var(--bevel-face);
+}
+
+@mixin bevel-sunken {
+  box-shadow:
+    inset -1px -1px var(--bevel-light),
+    inset 1px 1px var(--bevel-shadow),
+    inset -2px -2px var(--bevel-face),
+    inset 2px 2px var(--bevel-dark);
+}
+
+/* thin sunken field — inputs, list views, status bar segments */
+@mixin bevel-field {
+  box-shadow:
+    inset -1px -1px var(--bevel-light),
+    inset 1px 1px var(--bevel-shadow);
+}
+
+/* etched groove — group boxes (outer dark top-left, inner light) */
+@mixin bevel-groove {
+  box-shadow: inset 1px 1px var(--bevel-light);
+}
+
+/* ---- Win95 High-Contrast (dark) --------------------------- */
+
+@mixin dark-tokens {
+  --desktop: #0b1414;
+  --desktop-dot: rgba(255, 255, 255, .04);
+
+  --face: #3a3a3a;
+  --bevel-light: #6a6a6a;
+  --bevel-face: #4a4a4a;
+  --bevel-shadow: #1c1c1c;
+  --bevel-dark: #000000;
+
+  --win-bg: #1e1e1e;
+  --win-text: #d8d8d8;
+  --text-muted: #a0a0a0;
+
+  --title-a: #000040;
+  --title-b: #104080;
+  --title-text: #ffffff;
+  --title-off-a: #2a2a2a;
+  --title-off-b: #4a4a4a;
+
+  --sel-bg: #2a6fd6;
+  --sel-text: #ffffff;
+
+  --link: #6fb3ff;
+  --link-visited: #c39bff;
+}
+
+:root {
+  /* ---- desktop + panels (classic Win95 — the base) ---- */
+  --desktop: #008080;
+  --desktop-dot: rgba(0, 0, 0, .06);
+
+  --face: #c0c0c0;
+  --bevel-light: #ffffff;
+  --bevel-face: #dfdfdf;
+  --bevel-shadow: #808080;
+  --bevel-dark: #000000;
+
+  --win-bg: #ffffff;
+  --win-text: #000000;
+  --text-muted: #5a5a5a;
+
+  --title-a: #000080;
+  --title-b: #1084d0;
+  --title-text: #ffffff;
+  --title-off-a: #808080;
+  --title-off-b: #b5b5b5;
+
+  --sel-bg: #000080;
+  --sel-text: #ffffff;
+
+  --link: #0000ee;
+  --link-visited: #551a8b;
+
+  /* ---- MS-DOS Prompt panel (always a dark console) ---- */
+  --dos-bg: #000000;
+  --dos-text: #c8c8c8;
+  --sy-comment: #7a7a7a;
+  --sy-keyword: #55ffff;
+  --sy-string: #55ff55;
+  --sy-number: #ffff55;
+  --sy-name: #d0d0d0;
+  --sy-func: #55aaff;
+  --sy-type: #55ffff;
+  --sy-builtin: #aaffaa;
+  --sy-error: #ff5555;
+  --sy-add: #55ff55;
+  --sy-del: #ff5555;
+
+  /* ---- type stacks (system fonts only) ---- */
+  --font-sans: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, Verdana, Geneva, sans-serif;
+  --font-ui: Tahoma, Verdana, Geneva, "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+  --font-mono: "Lucida Console", "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* spacing scale */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* type scale */
+  --step-0: 1rem;
+  --step-1: 1.15rem;
+  --step-2: 1.4rem;
+  --step-3: 1.9rem;
+  --step-4: clamp(2.4rem, 6vw, 3.75rem);
+
+  /* layout widths */
+  --wrap: 720px;
+  --wrap-wide: 1040px;
+
+  /* fixed taskbar height (body padding + anchor offsets) */
+  --taskbar-h: 48px;
+}
+
+:root[data-theme="dark"] {
+  @include dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-tokens;
+  }
+}

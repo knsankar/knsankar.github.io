@@ -1,0 +1,26 @@
+/* ============================================================
+   theme toggle — taskbar tray button
+   ============================================================ */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: var(--face);
+  color: var(--win-text);
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: .76rem;
+  @include bevel-raised;
+}
+
+.toggle:active {
+  @include bevel-sunken;
+}
+
+.toggle__icon {
+  font-size: .9rem;
+  line-height: 1;
+}

@@ -1,0 +1,32 @@
+/* ============================================================
+   layout primitives
+   ============================================================ */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--sp-5);
+}
+
+.wrap--wide {
+  max-width: var(--wrap-wide);
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .82rem;
+  padding: var(--sp-2) var(--sp-4);
+  z-index: 10000;
+  @include bevel-raised;
+}
+
+.skip-link:focus {
+  left: var(--sp-4);
+  top: var(--sp-4);
+}

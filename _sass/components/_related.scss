@@ -1,0 +1,41 @@
+/* ============================================================
+   related posts — group box list
+   ============================================================ */
+
+.related {
+  position: relative;
+  margin: var(--sp-7) 0;
+  padding: var(--sp-6) var(--sp-5) var(--sp-4);
+  border: 1px solid var(--bevel-shadow);
+  @include bevel-groove;
+}
+
+.related h4 {
+  position: absolute;
+  top: -.72em;
+  left: var(--sp-4);
+  margin: 0;
+  padding: 0 6px;
+  background: var(--win-bg);
+  font-size: .84rem;
+}
+
+.related ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.related li {
+  margin: 0;
+}
+
+.related li + li {
+  border-top: 1px solid var(--bevel-face);
+}
+
+.related a {
+  display: block;
+  padding: 6px 4px;
+  color: var(--link);
+}

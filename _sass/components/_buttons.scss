@@ -1,0 +1,143 @@
+/* ============================================================
+   Win95 controls — buttons, fields, tabs, group boxes, status bar
+   ============================================================ */
+
+/* ---- button ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: .82rem;
+  line-height: 1;
+  color: var(--win-text);
+  background: var(--face);
+  padding: 6px 12px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  @include bevel-raised;
+}
+
+.btn:hover,
+.btn:focus,
+a.btn:visited {
+  background: var(--face);
+  color: var(--win-text);
+}
+
+.btn:active {
+  padding: 7px 11px 5px 13px; /* 1px press nudge */
+  @include bevel-sunken;
+}
+
+.btn[aria-current="page"] {
+  font-weight: 700;
+  @include bevel-sunken;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ---- text field ---- */
+.field {
+  font-family: var(--font-mono);
+  font-size: .85rem;
+  color: var(--win-text);
+  background: var(--win-bg);
+  padding: var(--sp-3);
+  @include bevel-field;
+}
+
+.field:focus {
+  outline: 1px dotted var(--bevel-dark);
+  outline-offset: -4px;
+}
+
+/* ---- property-sheet tabs ---- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 2px;
+  padding-left: 4px;
+  border-bottom: 1px solid var(--bevel-shadow);
+}
+
+.tab {
+  position: relative;
+  top: 2px;
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  color: var(--win-text);
+  background: var(--face);
+  padding: 5px 12px 7px;
+  text-decoration: none;
+  @include bevel-raised;
+  box-shadow:
+    inset 0 1px var(--bevel-light),
+    inset 1px 0 var(--bevel-light),
+    inset -1px 0 var(--bevel-dark),
+    inset 2px 0 var(--bevel-face);
+}
+
+.tab:hover,
+.tab:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.tab.is-active {
+  background: var(--win-bg);
+  font-weight: 700;
+  padding-bottom: 9px;
+}
+
+/* ---- group box (fieldset + legend) ---- */
+.groupbox {
+  margin: 0 0 var(--sp-6);
+  padding: var(--sp-2) var(--sp-5) var(--sp-5);
+  border: 1px solid var(--bevel-shadow);
+  @include bevel-groove;
+}
+
+.groupbox > legend,
+.groupbox__label {
+  font-family: var(--font-ui);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--win-text);
+  padding: 0 6px;
+}
+
+/* ---- status bar ---- */
+.statusbar {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  background: var(--face);
+  font-family: var(--font-ui);
+  font-size: .74rem;
+}
+
+.statusbar__seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  background: var(--face);
+  @include bevel-field;
+}
+
+.statusbar__seg--grow {
+  flex: 1;
+}
+
+.statusbar__seg a {
+  color: var(--win-text);
+}

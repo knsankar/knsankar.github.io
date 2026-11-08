@@ -1,0 +1,78 @@
+/* ============================================================
+   reset + desktop surface
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--bevel-shadow) var(--bevel-face);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding-bottom: var(--taskbar-h);
+
+  /* teal desktop + optional 2px dither */
+  background-color: var(--desktop);
+  background-image:
+    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%),
+    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%);
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+
+  color: var(--win-text);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+:focus-visible {
+  outline: 1px dotted var(--win-text);
+  outline-offset: 2px;
+}
+
+/* ---- 90s scrollbars (WebKit/Blink; Firefox uses scrollbar-color) ---- */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bevel-face);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--face);
+  box-shadow:
+    inset -1px -1px var(--bevel-dark),
+    inset 1px 1px var(--bevel-light),
+    inset -2px -2px var(--bevel-shadow),
+    inset 2px 2px var(--bevel-face);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bevel-face);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

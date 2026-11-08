@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /llms-full.txt
+---
+# {{ site.title }}
+
+> {{ site.description }} A personal blog on security engineering: detection engineering, red teaming, and databases.
+
+Author: {{ site.author.name }}. Canonical site: {{ site.url }}/
+{% for post in site.posts %}
+
+---
+
+## {{ post.title }}
+
+- URL: {{ site.url }}{{ post.url }}
+- Date: {{ post.date | date: "%Y-%m-%d" }}
+{% if post.tags %}- Tags: {{ post.tags | join: ', ' }}
+{% endif %}{% if post.summary %}- Summary: {{ post.summary }}
+{% endif %}
+{{ post.content | strip_html | strip }}
+{% endfor %}

@@ -1,0 +1,37 @@
+/* ============================================================
+   author card — "About" group box
+   ============================================================ */
+
+.author {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  margin: var(--sp-7) 0;
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border: 1px solid var(--bevel-shadow);
+  @include bevel-groove;
+}
+
+.author h4 {
+  position: absolute;
+  top: -.72em;
+  left: var(--sp-4);
+  margin: 0;
+  padding: 0 6px;
+  background: var(--win-bg);
+  font-size: .84rem;
+}
+
+.author img {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border: 1px solid var(--bevel-shadow);
+}
+
+.author p {
+  margin: 0;
+  font-size: .86rem;
+  color: var(--text-muted);
+}

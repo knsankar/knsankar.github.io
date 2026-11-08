@@ -1,0 +1,87 @@
+/* ============================================================
+   list view — Win95 "Details" style post lists
+   ============================================================ */
+
+.listview {
+  margin: 0 0 var(--sp-6);
+  background: var(--win-bg);
+  font-family: var(--font-ui);
+  font-size: .88rem;
+  @include bevel-field;
+}
+
+.listview__head {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  background: var(--face);
+  border-bottom: 1px solid var(--bevel-shadow);
+}
+
+.listview__head span {
+  padding: 4px 8px;
+  font-weight: 700;
+}
+
+.listview__head span + span {
+  border-left: 1px solid var(--bevel-shadow);
+  box-shadow: inset 1px 0 var(--bevel-light);
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li + li {
+  border-top: 1px solid var(--bevel-face);
+}
+
+.post-list li a {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  color: var(--win-text);
+  text-decoration: none;
+}
+
+.post-list li a > * {
+  padding: 6px 8px;
+}
+
+.post-row__date {
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+
+.post-row__meta {
+  color: var(--text-muted);
+  font-size: .74rem;
+  margin-left: 6px;
+}
+
+.post-list li a:hover,
+.post-list li a:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.post-list li a:hover .post-row__date,
+.post-list li a:focus .post-row__date,
+.post-list li a:hover .post-row__meta,
+.post-list li a:focus .post-row__meta {
+  color: inherit;
+}
+
+@media (max-width: 520px) {
+  .listview__head {
+    display: none;
+  }
+
+  .post-list li a {
+    grid-template-columns: 1fr;
+  }
+
+  .post-row__date {
+    padding-bottom: 0;
+  }
+}

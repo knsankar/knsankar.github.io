@@ -1,0 +1,29 @@
+<nav class="taskbar" aria-label="Primary">
+  <details class="start">
+    <summary>
+      <svg class="start__flag" aria-hidden="true"><use xlink:href="#icon-flag"></use></svg>
+      <span class="start__label">{{ site.title }}</span>
+    </summary>
+    <div class="start__menu">
+      <a href="{{ '/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>Home</a>
+      <a href="{{ '/blog/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Blog</a>
+      <a href="{{ '/tags/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Tags</a>
+      <a href="http://ta.knsankar.in"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>தமிழ்</a>
+      <hr>
+      <a href="{{ '/feed.xml' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-rss"></use></svg>RSS feed</a>
+      <a href="{{ '/llms.txt' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>llms.txt</a>
+    </div>
+  </details>
+
+  <div class="tasks">
+    <a class="task" href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>Home</span></a>
+    <a class="task" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog/' %} aria-current="page"{% endif %}><span>Blog</span></a>
+    <a class="task" href="{{ '/tags/' | relative_url }}"{% if page.url contains '/tags/' %} aria-current="page"{% endif %}><span>Tags</span></a>
+    <a class="task" href="http://ta.knsankar.in"><span>தமிழ்</span></a>
+  </div>
+
+  <div class="tray">
+    {% include theme-toggle.html %}
+    <time class="clock" id="clock" datetime="">--:--</time>
+  </div>
+</nav>

@@ -1,4 +1,27 @@
 ---
-layout: page
+layout: window
 title: Home
+window_title: Welcome
 ---
+<h1>{{ site.title }}</h1>
+<p class="lede">{{ site.description }} Readable by humans and, increasingly, by their agents.</p>
+
+{% if site.retro.under_construction %}
+<p class="construction">This site is permanently under construction. Mind the wet paint.</p>
+{% endif %}
+
+<section class="feed">
+    <h2 class="section-label">Latest</h2>
+    <div class="listview">
+        <div class="listview__head"><span>Date</span><span>Title</span></div>
+        <ul class="post-list">
+            {% for post in site.posts limit: 5 %}
+                {% unless post.hidden %}{% include blog-post.html %}{% endunless %}
+            {% else %}
+                <li><a href="{{ '/blog/' | relative_url }}"><span class="post-row__date">—</span><span class="post-row__title">Nothing published yet.</span></a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+<p class="text-center"><a class="btn" href="{{ '/blog/' | relative_url }}">All posts &raquo;</a></p>

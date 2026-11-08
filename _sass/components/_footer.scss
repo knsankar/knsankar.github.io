@@ -1,0 +1,77 @@
+/* ============================================================
+   footer — the window's own footer band: visitor counter,
+   badge wall, webring, socials, guestbook + the status bar
+   ============================================================ */
+
+.site-foot {
+  margin-top: 3px;
+  color: var(--win-text);
+}
+
+.site-foot__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  align-items: center;
+  padding: var(--sp-5) var(--sp-4);
+  background: var(--face);
+  border-top: 1px solid var(--bevel-shadow);
+  box-shadow: inset 0 1px var(--bevel-light);
+}
+
+.webring {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  text-align: center;
+}
+
+.guestbook {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: .84rem;
+  text-align: center;
+}
+
+.site-foot .statusbar {
+  margin-top: 0;
+}
+
+/* social links */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  justify-content: center;
+  align-items: center;
+}
+
+.social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .76rem;
+  text-decoration: none;
+  @include bevel-raised;
+}
+
+.social a:visited {
+  color: var(--win-text);
+}
+
+.social a:hover,
+.social a:focus,
+.social a:active {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.social svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}

@@ -1,0 +1,14 @@
+---
+layout: null
+permalink: /ai.txt
+---
+# ai.txt — content policy for AI crawlers
+# Spec: https://site.spawning.ai/spawning-ai-txt
+
+User-Agent: *
+Allow: /
+Disallow:
+
+# Content may be crawled, indexed, summarised, and cited, provided that
+# attribution and a link back to the original URL are included.
+# Contact: {{ site.email }}

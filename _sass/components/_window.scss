@@ -1,0 +1,158 @@
+/* ============================================================
+   window — the single page window (title bar + client + status)
+   ============================================================ */
+
+.window {
+  position: relative;
+  margin: var(--sp-4) 0;
+  padding: 3px;
+  background: var(--face);
+  @include bevel-raised;
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 2px 3px 2px 4px;
+  background: linear-gradient(90deg, var(--title-a), var(--title-b));
+  color: var(--title-text);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: .84rem;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.window--dragging .titlebar { cursor: grabbing; }
+
+.titlebar__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.titlebar__title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titlebar__btns {
+  display: flex;
+  gap: 2px;
+}
+
+.win-btn {
+  width: 18px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--win-text);
+  background: var(--face);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  @include bevel-raised;
+}
+
+.win-btn:active {
+  @include bevel-sunken;
+}
+
+.win-btn:focus-visible {
+  outline: 1px dotted var(--bevel-dark);
+  outline-offset: -3px;
+}
+
+.win-btn[data-win="close"] {
+  margin-left: 2px;
+}
+
+/* ---- client area ---- */
+.window__body {
+  margin: 3px 0;
+  padding: var(--sp-5) var(--sp-5) var(--sp-6);
+  background: var(--win-bg);
+  color: var(--win-text);
+  @include bevel-sunken;
+}
+
+/* ---- interactive states ---- */
+.window--dragging {
+  z-index: 60;
+}
+
+.window--min,
+.window--closed {
+  display: none;
+}
+
+.window--max {
+  position: fixed;
+  inset: 0 0 var(--taskbar-h) 0;
+  margin: 0;
+  z-index: 50;
+  transform: none !important;
+  overflow: auto;
+}
+
+.window--max .window__body {
+  min-height: 0;
+}
+
+/* ---- desktop shortcut (shown after the window is closed) ---- */
+.desktop-icon {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 88px;
+  margin: var(--sp-4) 0;
+  padding: 6px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: .78rem;
+  text-align: center;
+}
+
+.desktop-icon[hidden] {
+  display: none;
+}
+
+.desktop-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.desktop-icon__label {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, .9);
+}
+
+.desktop-icon:hover .desktop-icon__label,
+.desktop-icon:focus .desktop-icon__label {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+  text-shadow: none;
+}
+
+.desktop-icon:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .window__body {
+    padding: var(--sp-5) var(--sp-4);
+  }
+}

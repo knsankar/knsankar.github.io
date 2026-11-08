@@ -1,0 +1,8 @@
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("win95-theme");
+      if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>

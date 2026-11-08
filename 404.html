@@ -1,14 +1,9 @@
 ---
-layout: default
-permalink: /404.html 
+layout: window
+title: Page not found
+window_title: Error
+permalink: /404.html
 ---
-
-<section class="lost-container">
-  <h1>Uh oh!</h1>
-  <div class="link">
-    <img class="selfie" alt="{{ site.name }}" src="{{ site.url }}/assets/images/error.gif" />
-  </div>
-  <br />
-  <br />
-  <a href="/">Take me home!</a>
-</section>
+<h1>Page not found</h1>
+<p class="lede">This program has performed an illegal operation and will be shut down. The page you requested isn't in this directory — it may have been moved, renamed, or never existed.</p>
+<p class="text-center"><a class="btn" href="{{ '/' | relative_url }}">OK &mdash; take me home</a></p>

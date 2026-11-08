@@ -1,0 +1,67 @@
+/* ============================================================
+   tags — chips, tab index, anchored panels
+   ============================================================ */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: var(--sp-4) 0 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .74rem;
+  text-decoration: none;
+  @include bevel-raised;
+}
+
+.tag:visited {
+  color: var(--win-text);
+}
+
+.tag:hover,
+.tag:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.tag__count {
+  color: var(--text-muted);
+  font-size: .66rem;
+}
+
+.tag:hover .tag__count,
+.tag:focus .tag__count {
+  color: inherit;
+}
+
+/* ---- tab strip index ---- */
+.tabs {
+  margin: 0 0 var(--sp-5);
+}
+
+.tab .tag__count {
+  margin-left: 5px;
+}
+
+.tab:hover .tag__count,
+.tab:focus .tag__count {
+  color: inherit;
+}
+
+/* ---- anchored panels ---- */
+.tag-panel {
+  margin: 0 0 var(--sp-6);
+  scroll-margin-top: calc(var(--taskbar-h) + var(--sp-5));
+}
+
+.tag-panel .listview {
+  margin-bottom: 0;
+}

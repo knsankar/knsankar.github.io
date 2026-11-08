@@ -1,0 +1,41 @@
+/* ============================================================
+   88x31 badge wall
+   ============================================================ */
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  justify-content: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 31px;
+  padding: 0 4px;
+  background: var(--face);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  font-size: .58rem;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  @include bevel-raised;
+}
+
+a.badge:visited {
+  color: var(--win-text);
+}
+
+a.badge:hover,
+a.badge:focus {
+  background: var(--sel-bg);
+  color: var(--sel-text);
+}
+
+.badge--hot {
+  font-weight: 700;
+}
