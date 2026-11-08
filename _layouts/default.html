@@ -192,6 +192,18 @@ layout: compress
             } catch (e) {}
           }
 
+          /* a maximized window stays maximized while you browse, per tab */
+          var MAX_KEY = "win95-maximized:";
+          function storedMax(key) {
+            try { return sessionStorage.getItem(MAX_KEY + key) === "1"; } catch (e) { return false; }
+          }
+          function setStoredMax(key, max) {
+            try {
+              if (max) sessionStorage.setItem(MAX_KEY + key, "1");
+              else sessionStorage.removeItem(MAX_KEY + key);
+            } catch (e) {}
+          }
+
           /* a page reload keeps windows the user closed closed; arriving by
              any other navigation (link, icon, bookmark, back/forward) is a
              fresh visit, so the destination window opens again. Deciding here,
@@ -232,6 +244,10 @@ layout: compress
             } else {
               setStoredClosed(id, false);
             }
+            /* the page window's id changes on every navigation, so remember
+               maximize under one shared name and carry it across pagination */
+            var maxKey = id.indexOf("page:") === 0 ? "page" : id;
+            if (state !== "closed" && storedMax(maxKey)) state = "maximized";
             var tx = 0, ty = 0;
 
             function showTask() {
@@ -280,6 +296,8 @@ layout: compress
                   state = state === "minimized" ? "normal" : "minimized";
                 } else if (act === "max") {
                   state = state === "maximized" ? "normal" : "maximized";
+                  /* remember the choice so the next page opens the same way */
+                  setStoredMax(maxKey, state === "maximized");
                 } else if (act === "close") {
                   state = "closed";
                   /* remember it for this tab, so a reload keeps it closed */
@@ -421,6 +439,7 @@ layout: compress
                 tx = 0; ty = 0;
                 win.style.transform = "";
                 setStoredClosed(id, false);
+                setStoredMax(maxKey, false);
                 apply();
               }
             };
