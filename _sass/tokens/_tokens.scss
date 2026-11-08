@@ -38,8 +38,12 @@
 /* ---- Win95 High-Contrast (dark) --------------------------- */
 
 @mixin dark-tokens {
-  --desktop: #0b1414;
-  --desktop-dot: rgba(255, 255, 255, .04);
+  /* "Clouds" wallpaper at night — near-black sky, barely-there wisps */
+  --sky-top: #0a1a2c;
+  --sky-bottom: #040a12;
+  --cloud-strong: rgba(150, 180, 220, .12);
+  --cloud-mid: rgba(150, 180, 220, .075);
+  --cloud-soft: rgba(150, 180, 220, .045);
 
   --face: #3a3a3a;
   --bevel-light: #6a6a6a;
@@ -65,9 +69,12 @@
 }
 
 :root {
-  /* ---- desktop + panels (classic Win95 — the base) ---- */
-  --desktop: #008080;
-  --desktop-dot: rgba(0, 0, 0, .06);
+  /* ---- desktop wallpaper: "Clouds" (Win95 Plus!) — classic daytime sky ---- */
+  --sky-top: #2f74c9;
+  --sky-bottom: #0d3f86;
+  --cloud-strong: rgba(255, 255, 255, .9);
+  --cloud-mid: rgba(255, 255, 255, .68);
+  --cloud-soft: rgba(255, 255, 255, .45);
 
   --face: #c0c0c0;
   --bevel-light: #ffffff;

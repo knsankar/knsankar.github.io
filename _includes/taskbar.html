@@ -8,7 +8,7 @@
       <a href="{{ '/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>Home</a>
       <a href="{{ '/blog/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Blog</a>
       <a href="{{ '/tags/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Tags</a>
-      <a href="http://ta.knsankar.in"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>தமிழ்</a>
+      <button type="button" data-launch="tamil"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>தமிழ்</button>
       <hr>
       <a href="{{ '/feed.xml' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-rss"></use></svg>RSS feed</a>
       <a href="{{ '/llms.txt' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>llms.txt</a>
@@ -19,7 +19,7 @@
     <a class="task" href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>Home</span></a>
     <a class="task" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog/' %} aria-current="page"{% endif %}><span>Blog</span></a>
     <a class="task" href="{{ '/tags/' | relative_url }}"{% if page.url contains '/tags/' %} aria-current="page"{% endif %}><span>Tags</span></a>
-    <a class="task" href="http://ta.knsankar.in"><span>தமிழ்</span></a>
+    <button type="button" class="task task--window" id="tamil-task" aria-pressed="false"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg><span>தமிழ்</span></button>
   </div>
 
   <div class="tray">

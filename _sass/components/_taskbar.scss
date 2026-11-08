@@ -65,18 +65,26 @@
   @include bevel-raised;
 }
 
-.start__menu a {
+.start__menu a,
+.start__menu button {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
   color: var(--win-text);
   text-decoration: none;
+  font-family: inherit;
   font-size: .82rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
 .start__menu a:hover,
-.start__menu a:focus {
+.start__menu a:focus,
+.start__menu button:hover,
+.start__menu button:focus {
   background: var(--sel-bg);
   color: var(--sel-text);
 }

@@ -59,13 +59,14 @@
   margin-top: var(--sp-7);
 }
 
-.prose code {
+/* inline code only — code blocks are styled by .highlight (see _syntax.scss) */
+.prose :not(pre) > code {
   background: var(--face);
   padding: 1px 5px;
   font-size: .88em;
 }
 
-.prose pre {
+.prose :not(.highlight) > pre {
   margin: 0 0 var(--sp-6);
   padding: var(--sp-4);
   background: var(--dos-bg);

@@ -21,9 +21,49 @@ layout: compress
 
     {% include marquee.html %}
 
+    {% comment %} desktop shortcuts for the menu items (shown where there's desktop room) {% endcomment %}
+    <div class="desk-icons">
+      <a class="desktop-icon" href="{{ '/' | relative_url }}">
+        <svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>
+        <span class="desktop-icon__label">Home</span>
+      </a>
+      <a class="desktop-icon" href="{{ '/blog/' | relative_url }}">
+        <svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>
+        <span class="desktop-icon__label">Blog</span>
+      </a>
+      <a class="desktop-icon" href="{{ '/tags/' | relative_url }}">
+        <svg aria-hidden="true"><use xlink:href="#icon-tag"></use></svg>
+        <span class="desktop-icon__label">Tags</span>
+      </a>
+      <button type="button" class="desktop-icon" data-launch="tamil">
+        <svg aria-hidden="true"><use xlink:href="#icon-globe"></use></svg>
+        <span class="desktop-icon__label">தமிழ்</span>
+      </button>
+    </div>
+
     <main id="main">
     {{ content }}
     </main>
+
+    {% comment %} desktop app window: the Tamil site framed like a 90s browser {% endcomment %}
+    <div class="window app-window window--closed" data-window data-window-id="tamil" data-window-task="#tamil-task" data-window-title="Netscape Navigator &mdash; தமிழ்">
+      <div class="titlebar">
+        <svg class="titlebar__icon" aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>
+        <span class="titlebar__title">Netscape Navigator &mdash; தமிழ்</span>
+        <span class="titlebar__btns">
+          <button type="button" class="win-btn" data-win="min" aria-label="Minimize" title="Minimize">_</button>
+          <button type="button" class="win-btn" data-win="max" aria-label="Maximize" title="Maximize">&#9633;</button>
+          <button type="button" class="win-btn" data-win="close" aria-label="Close" title="Close">&#10005;</button>
+        </span>
+      </div>
+      <div class="window__body app-window__body">
+        <div class="browser-bar">
+          <span class="browser-bar__url">https://ta.knsankar.in/</span>
+          <a class="btn browser-bar__go" href="https://ta.knsankar.in/" target="_blank" rel="noopener noreferrer">Open &#8599;</a>
+        </div>
+        <iframe class="app-window__frame" data-frame-src="https://ta.knsankar.in/" title="ta.knsankar.in" loading="lazy" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
 
     {% include taskbar.html %}
     {% include icons.html %}
@@ -85,130 +125,165 @@ layout: compress
 
         /* ---- desktop window manager (drag / minimize / maximize / close) ---- */
         (function () {
-          var win = document.querySelector("[data-window]");
-          if (!win) return;
-          var titlebar = win.querySelector(".titlebar");
+          var wins = Array.prototype.slice.call(document.querySelectorAll("[data-window]"));
+          if (!wins.length) return;
+
           var tasks = document.querySelector(".tasks");
-          var deskIcon = document.querySelector("[data-desktop-icon]");
-          var winTitle = win.getAttribute("data-window-title") || document.title;
+          var bar = document.querySelector(".taskbar");
+          var startMenu = document.querySelector(".start");
+          var zTop = 20;
+          var registry = {};
 
-          var task = document.createElement("button");
-          task.type = "button";
-          task.className = "task task--window";
-          task.setAttribute("aria-pressed", "true");
-          task.innerHTML = '<svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg><span></span>';
-          task.querySelector("span").textContent = winTitle;
-          var taskShown = false;
+          wins.forEach(function (win, index) {
+            var id = win.getAttribute("data-window-id") || ("window-" + index);
+            var titlebar = win.querySelector(".titlebar");
+            var frame = win.querySelector("[data-frame-src]");
+            var winTitle = win.getAttribute("data-window-title") || document.title;
 
-          function showTask() {
-            if (!tasks || taskShown) return;
-            tasks.insertBefore(task, tasks.firstChild);
-            taskShown = true;
-          }
-          function hideTask() {
-            if (taskShown && task.parentNode) task.parentNode.removeChild(task);
-            taskShown = false;
-          }
+            /* task button: reuse one declared in markup (data-window-task="#id"), else create one */
+            var taskSel = win.getAttribute("data-window-task");
+            var task = taskSel ? document.querySelector(taskSel) : null;
+            var ownsTask = false;
+            if (!task && tasks) {
+              task = document.createElement("button");
+              task.type = "button";
+              task.className = "task task--window";
+              task.innerHTML = '<svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg><span></span>';
+              task.querySelector("span").textContent = winTitle;
+              ownsTask = true;
+            }
 
-          var state = "normal"; /* normal | minimized | maximized | closed */
-          var tx = 0, ty = 0;
+            var state = win.classList.contains("window--closed") ? "closed" : "normal";
+            var tx = 0, ty = 0;
 
-          function apply() {
-            win.classList.toggle("window--min", state === "minimized");
-            win.classList.toggle("window--max", state === "maximized");
-            win.classList.toggle("window--closed", state === "closed");
-            var open = state === "normal" || state === "maximized";
-            task.classList.toggle("task--active", open);
-            task.setAttribute("aria-pressed", open ? "true" : "false");
-            if (deskIcon) deskIcon.hidden = state !== "closed";
-          }
-
-          win.querySelectorAll(".win-btn").forEach(function (btn) {
-            btn.addEventListener("click", function () {
-              var act = btn.getAttribute("data-win");
-              if (act === "min") {
-                if (!tasks) return; /* nowhere to minimize to */
-                state = state === "minimized" ? "normal" : "minimized";
-                showTask();
-              } else if (act === "max") {
-                state = state === "maximized" ? "normal" : "maximized";
-                showTask();
-              } else if (act === "close") {
-                state = "closed";
-                hideTask();
+            function showTask() {
+              if (!ownsTask || !tasks || (task && task.parentNode)) return;
+              tasks.insertBefore(task, tasks.firstChild);
+            }
+            function hideTask() {
+              if (ownsTask && task && task.parentNode) task.parentNode.removeChild(task);
+            }
+            function raise() {
+              win.style.zIndex = String(++zTop);
+            }
+            function loadFrame() {
+              if (frame && state !== "closed" && !frame.getAttribute("src")) {
+                frame.setAttribute("src", frame.getAttribute("data-frame-src"));
               }
-              apply();
+            }
+
+            function apply() {
+              var open = state === "normal" || state === "maximized";
+              win.classList.toggle("window--min", state === "minimized");
+              win.classList.toggle("window--max", state === "maximized");
+              win.classList.toggle("window--closed", state === "closed");
+              if (task) {
+                task.classList.toggle("task--active", open);
+                task.setAttribute("aria-pressed", open ? "true" : "false");
+              }
+              if (state === "closed") { hideTask(); } else { showTask(); }
+              if (open) { loadFrame(); raise(); }
+            }
+
+            win.querySelectorAll(".win-btn").forEach(function (btn) {
+              btn.addEventListener("click", function () {
+                var act = btn.getAttribute("data-win");
+                if (act === "min") {
+                  if (!task) return; /* nowhere to minimize to */
+                  state = state === "minimized" ? "normal" : "minimized";
+                } else if (act === "max") {
+                  state = state === "maximized" ? "normal" : "maximized";
+                } else if (act === "close") {
+                  state = "closed";
+                }
+                apply();
+              });
             });
-          });
 
-          task.addEventListener("click", function () {
-            state = state === "minimized" ? "normal" : "minimized";
-            apply();
-          });
+            if (task) {
+              task.addEventListener("click", function () {
+                if (state === "closed") {
+                  state = "normal";
+                } else {
+                  state = state === "minimized" ? "normal" : "minimized";
+                }
+                apply();
+              });
+            }
 
-          if (deskIcon) {
-            deskIcon.addEventListener("click", function () {
-              state = "normal";
+            /* ---- drag by the title bar ---- */
+            var dragging = false, startX = 0, startY = 0, baseX = 0, baseY = 0, home = null;
+
+            win.addEventListener("pointerdown", raise, true);
+
+            titlebar.addEventListener("pointerdown", function (e) {
+              if (e.button !== 0 || state === "maximized") return;
+              if (e.target.closest(".win-btn")) return;
+              var r = win.getBoundingClientRect();
+              home = { left: r.left - tx, top: r.top - ty, width: r.width };
+              dragging = true;
+              startX = e.clientX; startY = e.clientY;
+              baseX = tx; baseY = ty;
+              win.classList.add("window--dragging");
+              titlebar.setPointerCapture(e.pointerId);
+              e.preventDefault();
+            });
+
+            titlebar.addEventListener("pointermove", function (e) {
+              if (!dragging) return;
+              var nx = baseX + (e.clientX - startX);
+              var ny = baseY + (e.clientY - startY);
+              var wantLeft = home.left + nx;
+              var wantTop = home.top + ny;
+              var vw = window.innerWidth, vh = window.innerHeight;
+              var barH = bar ? bar.offsetHeight : 0;
+              var minLeft = Math.min(0, vw - home.width);
+              var maxLeft = Math.max(0, vw - home.width);
+              var maxTop = Math.max(0, vh - barH - 30);
+              var left = Math.min(maxLeft, Math.max(minLeft, wantLeft));
+              var top = Math.min(maxTop, Math.max(0, wantTop));
+              tx = nx + (left - wantLeft);
+              ty = ny + (top - wantTop);
+              win.style.transform = "translate(" + tx + "px," + ty + "px)";
+            });
+
+            function endDrag(e) {
+              if (!dragging) return;
+              dragging = false;
+              win.classList.remove("window--dragging");
+              try { titlebar.releasePointerCapture(e.pointerId); } catch (err) {}
+            }
+            titlebar.addEventListener("pointerup", endDrag);
+            titlebar.addEventListener("pointercancel", endDrag);
+
+            /* double-click the title bar to snap back to centre */
+            titlebar.addEventListener("dblclick", function (e) {
+              if (e.target.closest(".win-btn")) return;
               tx = 0; ty = 0;
               win.style.transform = "";
-              showTask();
-              apply();
             });
-          }
 
-          /* ---- drag by the title bar ---- */
-          var dragging = false, startX = 0, startY = 0, baseX = 0, baseY = 0, home = null;
+            apply();
 
-          titlebar.addEventListener("pointerdown", function (e) {
-            if (e.button !== 0 || state === "maximized") return;
-            if (e.target.closest(".win-btn")) return;
-            var r = win.getBoundingClientRect();
-            home = { left: r.left - tx, top: r.top - ty, width: r.width };
-            dragging = true;
-            startX = e.clientX; startY = e.clientY;
-            baseX = tx; baseY = ty;
-            win.classList.add("window--dragging");
-            titlebar.setPointerCapture(e.pointerId);
-            e.preventDefault();
+            registry[id] = {
+              open: function () {
+                state = "normal";
+                tx = 0; ty = 0;
+                win.style.transform = "";
+                apply();
+              }
+            };
           });
 
-          titlebar.addEventListener("pointermove", function (e) {
-            if (!dragging) return;
-            var nx = baseX + (e.clientX - startX);
-            var ny = baseY + (e.clientY - startY);
-            var wantLeft = home.left + nx;
-            var wantTop = home.top + ny;
-            var vw = window.innerWidth, vh = window.innerHeight;
-            var bar = document.querySelector(".taskbar");
-            var barH = bar ? bar.offsetHeight : 0;
-            var minLeft = Math.min(0, vw - home.width);
-            var maxLeft = Math.max(0, vw - home.width);
-            var maxTop = Math.max(0, vh - barH - 30);
-            var left = Math.min(maxLeft, Math.max(minLeft, wantLeft));
-            var top = Math.min(maxTop, Math.max(0, wantTop));
-            tx = nx + (left - wantLeft);
-            ty = ny + (top - wantTop);
-            win.style.transform = "translate(" + tx + "px," + ty + "px)";
+          /* launchers (Start menu items / desktop shortcuts) */
+          document.querySelectorAll("[data-launch]").forEach(function (el) {
+            el.addEventListener("click", function () {
+              var api = registry[el.getAttribute("data-launch")];
+              if (!api) return;
+              api.open();
+              if (startMenu) startMenu.removeAttribute("open");
+            });
           });
-
-          function endDrag(e) {
-            if (!dragging) return;
-            dragging = false;
-            win.classList.remove("window--dragging");
-            try { titlebar.releasePointerCapture(e.pointerId); } catch (err) {}
-          }
-          titlebar.addEventListener("pointerup", endDrag);
-          titlebar.addEventListener("pointercancel", endDrag);
-
-          /* double-click the title bar to snap back to centre */
-          titlebar.addEventListener("dblclick", function (e) {
-            if (e.target.closest(".win-btn")) return;
-            tx = 0; ty = 0;
-            win.style.transform = "";
-          });
-
-          showTask();
-          apply();
         })();
       })();
     </script>

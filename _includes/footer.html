@@ -1,10 +1,7 @@
 <footer class="site-foot">
   <div class="site-foot__panel">
     {% include counter.html %}
-    {% include badges.html %}
-    <p class="webring">&laquo; <a href="{{ '/' | relative_url }}">{{ site.title }}</a> webring &raquo; <a href="http://ta.knsankar.in">ta.knsankar.in</a></p>
     {% include social-links.html %}
-    {% include guestbook.html %}
   </div>
   <div class="statusbar">
     <span class="statusbar__seg">{{ page.url | default: '/' }}</span>

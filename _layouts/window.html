@@ -5,11 +5,6 @@ layout: default
 {% capture _read %}{% if page.layout == 'post' %}{% include read-time.html content=content %}{% endif %}{% endcapture %}
 {% assign _read = _read | strip %}
 <div class="wrap wrap--wide">
-    <button type="button" class="desktop-icon" data-desktop-icon hidden>
-        <svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>
-        <span class="desktop-icon__label">{{ _win_title }}</span>
-    </button>
-
     <div class="window" data-window data-window-title="{{ _win_title | escape }}">
         <div class="titlebar">
             <svg class="titlebar__icon" aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>

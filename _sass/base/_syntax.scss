@@ -8,8 +8,8 @@
   overflow: auto;
   @include bevel-sunken;
 
-  /* faux console title bar */
-  &::before {
+  /* faux console title bar — only on the wrapper, not the inner <pre class="highlight"> */
+  &:not(pre)::before {
     display: block;
     content: "C:\\> Command Prompt";
     font-family: var(--font-ui);

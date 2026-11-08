@@ -19,18 +19,42 @@ body {
   min-height: 100vh;
   padding-bottom: var(--taskbar-h);
 
-  /* teal desktop + optional 2px dither */
-  background-color: var(--desktop);
-  background-image:
-    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%),
-    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%);
-  background-size: 4px 4px;
-  background-position: 0 0, 2px 2px;
+  /* solid fallback; the wallpaper itself lives on a fixed layer below */
+  background-color: var(--sky-bottom);
 
   color: var(--win-text);
   font-family: var(--font-sans);
   font-size: 18px;
   line-height: 1.7;
+}
+
+/* desktop wallpaper: "Clouds" (Win95 Plus!) — a pure-CSS sky with soft cloud
+   clusters on its own fixed layer, so it behaves like a real desktop behind
+   the scrolling content (and works on iOS, which ignores
+   background-attachment: fixed). The tokens swap in a dim night sky for
+   dark mode so it never glares. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--sky-bottom);
+  background-image:
+    /* upper-left cloud bank */
+    radial-gradient(ellipse 340px 130px at 14% 24%, var(--cloud-strong), transparent 70%),
+    radial-gradient(ellipse 240px 96px at 27% 31%, var(--cloud-mid), transparent 72%),
+    radial-gradient(ellipse 300px 120px at 21% 16%, var(--cloud-soft), transparent 74%),
+    /* mid-right cloud */
+    radial-gradient(ellipse 300px 110px at 74% 52%, var(--cloud-strong), transparent 72%),
+    radial-gradient(ellipse 200px 86px at 85% 60%, var(--cloud-mid), transparent 74%),
+    radial-gradient(ellipse 260px 104px at 65% 43%, var(--cloud-soft), transparent 74%),
+    /* lower band */
+    radial-gradient(ellipse 260px 110px at 60% 80%, var(--cloud-mid), transparent 74%),
+    radial-gradient(ellipse 420px 150px at 46% 90%, var(--cloud-soft), transparent 76%),
+    /* sky */
+    linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  background-repeat: no-repeat;
 }
 
 img {

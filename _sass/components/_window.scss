@@ -86,37 +86,99 @@
 }
 
 /* ---- interactive states ---- */
-.window--dragging {
+/* NOTE: scoped with the extra `.window` class so these out-rank `.app-window`
+   (which is declared later in this file at equal specificity). */
+.window.window--dragging {
   z-index: 60;
 }
 
-.window--min,
-.window--closed {
+.window.window--min,
+.window.window--closed {
   display: none;
 }
 
-.window--max {
+.window.window--max {
   position: fixed;
   inset: 0 0 var(--taskbar-h) 0;
   margin: 0;
+  width: auto;
+  height: auto;
   z-index: 50;
   transform: none !important;
   overflow: auto;
 }
 
-.window--max .window__body {
+.window.window--max .window__body {
   min-height: 0;
 }
 
-/* ---- desktop shortcut (shown after the window is closed) ---- */
+/* ---- app window (floating desktop app, e.g. the framed Tamil site) ---- */
+.app-window {
+  position: fixed;
+  top: 76px;
+  left: 72px;
+  z-index: 40;
+  width: min(760px, calc(100vw - 96px));
+  height: min(560px, calc(100vh - var(--taskbar-h) - 120px));
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-window__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--sp-3);
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-bar__url {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: .74rem;
+  color: var(--win-text);
+  background: var(--win-bg);
+  padding: 4px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include bevel-field;
+}
+
+.app-window__frame {
+  flex: 1;
+  width: 100%;
+  min-height: 200px;
+  border: 0;
+  background: #fff;
+}
+
+/* ---- desktop shortcut icons (menu items, pinned in the left gutter) ---- */
+.desk-icons {
+  display: none;
+  position: fixed;
+  left: var(--sp-3);
+  top: 48px;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
 .desktop-icon {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  width: 88px;
-  margin: var(--sp-4) 0;
-  padding: 6px;
+  width: 80px;
+  padding: 6px 4px;
   background: none;
   border: 0;
   cursor: pointer;
@@ -124,10 +186,7 @@
   font-family: var(--font-ui);
   font-size: .78rem;
   text-align: center;
-}
-
-.desktop-icon[hidden] {
-  display: none;
+  text-decoration: none;
 }
 
 .desktop-icon svg {
@@ -149,6 +208,13 @@
 .desktop-icon:focus-visible {
   outline: 1px dotted #fff;
   outline-offset: 2px;
+}
+
+/* only show the shortcuts when there is desktop room beside the window */
+@media (min-width: 1200px) {
+  .desk-icons {
+    display: flex;
+  }
 }
 
 @media (max-width: 520px) {
