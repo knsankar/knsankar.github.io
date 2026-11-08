@@ -177,6 +177,19 @@ layout: compress
           var zTop = 20;
           var registry = {};
 
+          /* remember which windows the user closed, per browser tab, so a
+             reload keeps them closed */
+          var CLOSED_KEY = "win95-closed:";
+          function storedClosed(id) {
+            try { return sessionStorage.getItem(CLOSED_KEY + id) === "1"; } catch (e) { return false; }
+          }
+          function setStoredClosed(id, closed) {
+            try {
+              if (closed) sessionStorage.setItem(CLOSED_KEY + id, "1");
+              else sessionStorage.removeItem(CLOSED_KEY + id);
+            } catch (e) {}
+          }
+
           wins.forEach(function (win, index) {
             var id = win.getAttribute("data-window-id") || ("window-" + index);
             var titlebar = win.querySelector(".titlebar");
@@ -196,7 +209,7 @@ layout: compress
               ownsTask = true;
             }
 
-            var state = win.classList.contains("window--closed") ? "closed" : "normal";
+            var state = (win.classList.contains("window--closed") || storedClosed(id)) ? "closed" : "normal";
             var tx = 0, ty = 0;
 
             function showTask() {
@@ -237,7 +250,6 @@ layout: compress
               if (open) { loadFrame(); raise(); }
             }
 
-            var closeUrl = win.getAttribute("data-close-url");
             win.querySelectorAll(".win-btn").forEach(function (btn) {
               btn.addEventListener("click", function () {
                 var act = btn.getAttribute("data-win");
@@ -247,13 +259,9 @@ layout: compress
                 } else if (act === "max") {
                   state = state === "maximized" ? "normal" : "maximized";
                 } else if (act === "close") {
-                  /* the page window *is* the page: closing it returns to the
-                     desktop, so a reload no longer resurrects the window */
-                  if (closeUrl && new URL(closeUrl, location.href).pathname !== location.pathname) {
-                    location.assign(closeUrl);
-                    return;
-                  }
                   state = "closed";
+                  /* remember it for this tab, so a reload keeps it closed */
+                  setStoredClosed(id, true);
                 }
                 apply();
               });
@@ -387,6 +395,7 @@ layout: compress
                 state = "normal";
                 tx = 0; ty = 0;
                 win.style.transform = "";
+                setStoredClosed(id, false);
                 apply();
               }
             };
@@ -403,6 +412,17 @@ layout: compress
               api.open();
               if (startMenu) startMenu.removeAttribute("open");
             });
+          });
+
+          /* following any internal link (desktop icon, Start item, post link)
+             re-opens the destination page's window */
+          document.addEventListener("click", function (e) {
+            var a = e.target.closest("a[href]");
+            if (!a) return;
+            var url;
+            try { url = new URL(a.getAttribute("href"), location.href); } catch (err) { return; }
+            if (url.origin !== location.origin) return;
+            setStoredClosed("page:" + url.pathname, false);
           });
         })();
 
