@@ -261,6 +261,62 @@ layout: compress
               win.style.transform = "";
             });
 
+            /* ---- resize by the edge / corner grips ---- */
+            var MIN_W = 320;
+            var MIN_H = 200;
+            ["e", "s", "se"].forEach(function (dir) {
+              var grip = document.createElement("span");
+              grip.className = "win-resize win-resize--" + dir;
+              grip.setAttribute("data-resize", dir);
+              grip.setAttribute("aria-hidden", "true");
+              win.appendChild(grip);
+            });
+
+            win.querySelectorAll("[data-resize]").forEach(function (grip) {
+              var dir = grip.getAttribute("data-resize");
+              var resizing = false, sx = 0, sy = 0, w0 = 0, h0 = 0, maxW = 0;
+
+              grip.addEventListener("pointerdown", function (e) {
+                if (e.button !== 0 || state === "maximized") return;
+                var r = win.getBoundingClientRect();
+                var parent = win.parentElement;
+                var cs = parent ? window.getComputedStyle(parent) : null;
+                resizing = true;
+                sx = e.clientX; sy = e.clientY;
+                w0 = r.width; h0 = r.height;
+                /* widest the window may grow: its container's content box */
+                maxW = (parent ? parent.clientWidth : window.innerWidth)
+                  - (cs ? (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0) : 0);
+                win.classList.add("window--sized", "window--resizing");
+                grip.setPointerCapture(e.pointerId);
+                e.preventDefault();
+                e.stopPropagation();
+              });
+
+              grip.addEventListener("pointermove", function (e) {
+                if (!resizing) return;
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+                var barH = bar ? bar.offsetHeight : 0;
+                if (dir.indexOf("e") !== -1) {
+                  var limitW = Math.min(vw - 16, maxW);
+                  win.style.width = Math.max(Math.min(MIN_W, limitW), Math.min(limitW, w0 + (e.clientX - sx))) + "px";
+                }
+                if (dir.indexOf("s") !== -1) {
+                  win.style.height = Math.max(MIN_H, Math.min(vh - barH - 16, h0 + (e.clientY - sy))) + "px";
+                }
+              });
+
+              function endResize(e) {
+                if (!resizing) return;
+                resizing = false;
+                win.classList.remove("window--resizing");
+                try { grip.releasePointerCapture(e.pointerId); } catch (err) {}
+              }
+              grip.addEventListener("pointerup", endResize);
+              grip.addEventListener("pointercancel", endResize);
+            });
+
             apply();
 
             registry[id] = {

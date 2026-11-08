@@ -11,6 +11,8 @@
 }
 
 .titlebar {
+  position: relative;
+  z-index: 4; /* above the resize grips so the window controls stay clickable */
   display: flex;
   align-items: center;
   gap: 6px;
@@ -85,6 +87,68 @@
   @include bevel-sunken;
 }
 
+/* ---- resize grips: right edge, bottom edge, bottom-right corner ---- */
+.win-resize {
+  position: absolute;
+  z-index: 2;
+  touch-action: none;
+}
+
+.win-resize--e {
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.win-resize--s {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.win-resize--se {
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+/* the classic Win95 corner grip */
+.win-resize--se::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--bevel-shadow);
+  border-bottom: 2px solid var(--bevel-shadow);
+}
+
+/* once a window has been resized it becomes a flex column, so the client
+   area scrolls instead of stretching the frame */
+.window--sized {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.window--sized > .window__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.window--resizing {
+  user-select: none;
+}
+
 /* ---- interactive states ---- */
 /* NOTE: scoped with the extra `.window` class so these out-rank `.app-window`
    (which is declared later in this file at equal specificity). */
@@ -101,11 +165,15 @@
   position: fixed;
   inset: 0 0 var(--taskbar-h) 0;
   margin: 0;
-  width: auto;
-  height: auto;
+  width: auto !important;
+  height: auto !important;
   z-index: 50;
   transform: none !important;
   overflow: auto;
+}
+
+.window.window--max .win-resize {
+  display: none;
 }
 
 .window.window--max .window__body {
