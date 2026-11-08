@@ -19,7 +19,6 @@ theme-mode: auto   # auto | dark | light
 
 # ── retro chrome (read by the 90s includes) ─────────────────
 retro:
-  marquee: "★ Welcome to knsankar ★ security engineering ★ detection ★ databases ★ est. 2013 ★ sign my guestbook ★ best viewed in Netscape ★"
   counter: "004219"
   under_construction: true
   under_construction_page: false
