@@ -366,11 +366,13 @@ layout: compress
             titlebar.addEventListener("pointerup", endDrag);
             titlebar.addEventListener("pointercancel", endDrag);
 
-            /* double-click the title bar to snap back to centre */
+            /* double-click the title bar to maximize / restore (Win95) */
             titlebar.addEventListener("dblclick", function (e) {
               if (e.target.closest(".win-btn")) return;
-              tx = 0; ty = 0;
-              win.style.transform = "";
+              state = state === "maximized" ? "normal" : "maximized";
+              /* remember the choice so the next page opens the same way */
+              setStoredMax(maxKey, state === "maximized");
+              apply();
             });
 
             /* ---- resize by the edge / corner grips ---- */
