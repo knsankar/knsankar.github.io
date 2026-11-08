@@ -19,9 +19,7 @@ theme-mode: auto   # auto | dark | light
 
 # ── retro chrome (read by the 90s includes) ─────────────────
 retro:
-  counter: "004219"
-  under_construction: true
-  under_construction_page: false
+  counter: "001337"
 
 # ── social (read by the nav / footer includes) ──────────────
 github: knsankar

@@ -35,23 +35,3 @@
 .feed {
   margin: 0 0 var(--sp-6);
 }
-
-/* "under construction" caution strip */
-.construction {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin: 0 0 var(--sp-5);
-  padding: var(--sp-2) var(--sp-4);
-  background: #ffffcc;
-  color: #000;
-  border: 1px solid var(--bevel-shadow);
-  font-family: var(--font-ui);
-  font-size: .82rem;
-}
-
-.construction::before {
-  content: "\26A0";
-  font-size: 1rem;
-  line-height: 1;
-}
