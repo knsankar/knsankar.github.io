@@ -1,0 +1,16 @@
+{%- comment -%} standalone Organization schema, homepage only {%- endcomment -%}
+{%- assign org_links = site.social.links | where_exp: "l", "l contains 'http'" -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ site.url }}/#organization",
+  "name": {{ site.title | jsonify }},
+  "url": "{{ site.url }}/",
+  "description": {{ site.description | jsonify }},
+  "logo": { "@type": "ImageObject", "url": "{{ site.url }}{{ site.logo }}" },
+  "email": {{ site.email | jsonify }},
+  "sameAs": [{% for l in org_links %}{{ l | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "founder": { "@type": "Person", "@id": "{{ site.url }}/#person", "name": {{ site.author.name | jsonify }} }
+}
+</script>

@@ -14,6 +14,8 @@ layout: compress
 
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+    <link rel="alternate" type="text/markdown" href="{{ '/llms.txt' | relative_url }}" title="llms.txt">
+    {% if page.url == "/" %}{% include org-schema.html %}{% endif %}
 </head>
 <body>
 
