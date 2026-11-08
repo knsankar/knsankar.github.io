@@ -282,6 +282,9 @@ layout: compress
                   state = "closed";
                   /* remember it for this tab, so a reload keeps it closed */
                   setStoredClosed(id, true);
+                  /* drop the embedded page so reopening starts from scratch
+                     instead of the last page it was left on */
+                  if (frame) frame.removeAttribute("src");
                 }
                 apply();
               });
