@@ -237,6 +237,7 @@ layout: compress
               if (open) { loadFrame(); raise(); }
             }
 
+            var closeUrl = win.getAttribute("data-close-url");
             win.querySelectorAll(".win-btn").forEach(function (btn) {
               btn.addEventListener("click", function () {
                 var act = btn.getAttribute("data-win");
@@ -246,6 +247,12 @@ layout: compress
                 } else if (act === "max") {
                   state = state === "maximized" ? "normal" : "maximized";
                 } else if (act === "close") {
+                  /* the page window *is* the page: closing it returns to the
+                     desktop, so a reload no longer resurrects the window */
+                  if (closeUrl && new URL(closeUrl, location.href).pathname !== location.pathname) {
+                    location.assign(closeUrl);
+                    return;
+                  }
                   state = "closed";
                 }
                 apply();
