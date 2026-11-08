@@ -190,6 +190,17 @@ layout: compress
             } catch (e) {}
           }
 
+          /* a page reload keeps windows the user closed closed; arriving by
+             any other navigation (link, icon, bookmark, back/forward) is a
+             fresh visit, so the destination window opens again. Deciding here,
+             on the destination, means it works even when a *previous* page was
+             served from a stale cache that lacked the session logic. */
+          var isReload = false;
+          try {
+            var navEntries = performance.getEntriesByType("navigation");
+            isReload = !!(navEntries[0] && navEntries[0].type === "reload");
+          } catch (e) {}
+
           wins.forEach(function (win, index) {
             var id = win.getAttribute("data-window-id") || ("window-" + index);
             var titlebar = win.querySelector(".titlebar");
@@ -209,7 +220,16 @@ layout: compress
               ownsTask = true;
             }
 
-            var state = (win.classList.contains("window--closed") || storedClosed(id)) ? "closed" : "normal";
+            /* the markup's window--closed is the designed default (e.g. the
+               Tamil window). A remembered close only survives a reload, so
+               arriving by link / icon / bookmark always opens the destination
+               window — even if the previous page came from a stale cache. */
+            var state = win.classList.contains("window--closed") ? "closed" : "normal";
+            if (isReload) {
+              if (storedClosed(id)) state = "closed";
+            } else {
+              setStoredClosed(id, false);
+            }
             var tx = 0, ty = 0;
 
             function showTask() {
@@ -412,17 +432,6 @@ layout: compress
               api.open();
               if (startMenu) startMenu.removeAttribute("open");
             });
-          });
-
-          /* following any internal link (desktop icon, Start item, post link)
-             re-opens the destination page's window */
-          document.addEventListener("click", function (e) {
-            var a = e.target.closest("a[href]");
-            if (!a) return;
-            var url;
-            try { url = new URL(a.getAttribute("href"), location.href); } catch (err) { return; }
-            if (url.origin !== location.origin) return;
-            setStoredClosed("page:" + url.pathname, false);
           });
         })();
 
