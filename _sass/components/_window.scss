@@ -187,7 +187,7 @@
   left: 72px;
   z-index: 40;
   width: min(760px, calc(100vw - 96px));
-  height: min(560px, calc(100vh - var(--taskbar-h) - 120px));
+  height: min(720px, calc(100vh - var(--taskbar-h) - 112px));
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -200,6 +200,17 @@
   flex-direction: column;
   gap: 6px;
   padding: var(--sp-3);
+}
+
+/* satellite windows cascade from the app-window origin; the offset is set per
+   instance via --sat-top / --sat-left. Declared as a class (not inline) so the
+   `.window.window--max` inset still out-ranks it when maximized. The height
+   follows the framed page (--sat-h, set by the window manager) but never
+   exceeds the viewport, so the CSS cap stays responsive. */
+.app-window--sat {
+  top: var(--sat-top, 76px);
+  left: var(--sat-left, 72px);
+  height: min(var(--sat-h, 320px), calc(100vh - var(--taskbar-h) - 112px));
 }
 
 .browser-bar {
@@ -289,4 +300,47 @@
   .window__body {
     padding: var(--sp-5) var(--sp-4);
   }
+}
+
+/* ---- embed mode: a page framed inside a satellite window -----------
+   Rendered bare — no desktop, taskbar, wallpaper or window chrome — so the
+   framed page shows just its content and footer. */
+html.embed body {
+  min-height: 0;
+  padding-bottom: 0;
+  background: none;
+}
+
+html.embed body::before {
+  display: none;
+}
+
+html.embed .skip-link,
+html.embed .desk-icons,
+html.embed .taskbar,
+html.embed .app-window,
+html.embed .ctx-menu,
+html.embed .props {
+  display: none !important;
+}
+
+html.embed .wrap {
+  max-width: none;
+  padding-inline: 0;
+}
+
+html.embed .window {
+  margin: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+html.embed .titlebar {
+  display: none;
+}
+
+html.embed .window__body {
+  margin: 0;
+  box-shadow: none;
 }

@@ -4,5 +4,14 @@
       var t = localStorage.getItem("win95-theme");
       if (t) document.documentElement.setAttribute("data-theme", t);
     } catch (e) {}
+    /* embed mode: this page is framed inside a satellite window, so it should
+       render bare (no desktop, taskbar or window chrome). Detect it by being
+       framed (survives navigation inside the frame, unlike a query param) or
+       by ?embed=1. Set before paint so there is no flash of the desktop. */
+    try {
+      var embedded = window.self !== window.top;
+      if (!embedded && /[?&]embed=1(?:&|$)/.test(window.location.search)) embedded = true;
+      if (embedded) document.documentElement.classList.add("embed");
+    } catch (e) {}
   })();
 </script>

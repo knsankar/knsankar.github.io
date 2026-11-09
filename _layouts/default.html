@@ -23,15 +23,15 @@ layout: compress
 
     {% comment %} desktop shortcuts for the menu items (shown where there's desktop room) {% endcomment %}
     <div class="desk-icons">
-      <a class="desktop-icon" href="{{ '/' | relative_url }}">
+      <a class="desktop-icon" href="{{ '/' | relative_url }}" data-launch-url="{{ '/' | relative_url }}" data-launch-title="Home">
         <svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>
         <span class="desktop-icon__label">Home</span>
       </a>
-      <a class="desktop-icon" href="{{ '/blog/' | relative_url }}">
+      <a class="desktop-icon" href="{{ '/blog/' | relative_url }}" data-launch-url="{{ '/blog/' | relative_url }}" data-launch-title="Blog">
         <svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>
         <span class="desktop-icon__label">Blog</span>
       </a>
-      <a class="desktop-icon" href="{{ '/tags/' | relative_url }}">
+      <a class="desktop-icon" href="{{ '/tags/' | relative_url }}" data-launch-url="{{ '/tags/' | relative_url }}" data-launch-title="Tags">
         <svg aria-hidden="true"><use xlink:href="#icon-tag"></use></svg>
         <span class="desktop-icon__label">Tags</span>
       </a>
@@ -170,6 +170,10 @@ layout: compress
 
         /* ---- desktop window manager (drag / minimize / maximize / close) ---- */
         (function () {
+          /* in embed mode (a page framed inside a satellite window) there is
+             no desktop to manage */
+          if (document.documentElement.classList.contains("embed")) return;
+
           var wins = Array.prototype.slice.call(document.querySelectorAll("[data-window]"));
           if (!wins.length) return;
 
@@ -215,11 +219,12 @@ layout: compress
             isReload = !!(navEntries[0] && navEntries[0].type === "reload");
           } catch (e) {}
 
-          wins.forEach(function (win, index) {
+          function createWindow(win, index) {
             var id = win.getAttribute("data-window-id") || ("window-" + index);
             var titlebar = win.querySelector(".titlebar");
             var frame = win.querySelector("[data-frame-src]");
             var winTitle = win.getAttribute("data-window-title") || document.title;
+            var satellite = win.classList.contains("app-window--sat");
 
             /* task button: reuse one declared in markup (data-window-task="#id"), else create one */
             var taskSel = win.getAttribute("data-window-task");
@@ -269,11 +274,43 @@ layout: compress
             function raise() {
               win.style.zIndex = String(++zTop);
             }
+            /* a satellite is transient: closing one discards it from the DOM
+               and the registry, so launching the same page again builds a
+               fresh window whose frame loads from scratch */
+            function discardSatellite() {
+              if (win.parentNode) win.parentNode.removeChild(win);
+              delete registry[id];
+              for (var i = winApis.length - 1; i >= 0; i--) {
+                if (winApis[i].el === win) winApis.splice(i, 1);
+              }
+              if (task) {
+                for (var j = taskApis.length - 1; j >= 0; j--) {
+                  if (taskApis[j].el === task) taskApis.splice(j, 1);
+                }
+              }
+            }
             function loadFrame() {
               if (frame && state !== "closed" && !frame.getAttribute("src")) {
                 frame.setAttribute("src", frame.getAttribute("data-frame-src"));
               }
             }
+
+            /* satellite windows follow the height of the page they frame: a
+               short listing gets a short window (no empty space below it),
+               a long post grows — up to the viewport cap, which CSS enforces.
+               Cross-origin frames (the Tamil site) are left at the default,
+               and a manual resize or maximize still wins the cascade. */
+            function fitFrame() {
+              if (!satellite || !frame) return;
+              var doc;
+              try { doc = frame.contentDocument; } catch (e) { return; }
+              if (!doc || !doc.body) return;
+              var contentH = Math.round(doc.body.getBoundingClientRect().height);
+              if (contentH < 1) return; /* still blank */
+              var chromeH = win.getBoundingClientRect().height - frame.clientHeight;
+              win.style.setProperty("--sat-h", Math.max(240, contentH + chromeH) + "px");
+            }
+            if (frame) frame.addEventListener("load", fitFrame);
 
             function apply() {
               var open = state === "normal" || state === "maximized";
@@ -307,6 +344,7 @@ layout: compress
                   if (frame) frame.removeAttribute("src");
                 }
                 apply();
+                if (state === "closed" && satellite) discardSatellite();
               });
             });
 
@@ -436,6 +474,7 @@ layout: compress
               el: win,
               getState: function () { return state; },
               setState: function (s) { state = s; apply(); },
+              raise: raise,
               open: function () {
                 state = "normal";
                 tx = 0; ty = 0;
@@ -448,7 +487,75 @@ layout: compress
             registry[id] = api;
             winApis.push({ el: win, api: api });
             if (task) taskApis.push({ el: task, api: api });
-          });
+          }
+
+          wins.forEach(createWindow);
+
+          /* ---- satellite windows ------------------------------------------
+             The Home / Blog / Tags shortcuts open their page in a floating
+             window instead of navigating, so two pages can be open at once.
+             Satellites are transient: a reload returns to just the page
+             window, and closing one discards it entirely. */
+          var satCount = 0;
+          function openSatellite(url, title) {
+            if (!url) return;
+            var path;
+            try { path = new URL(url, window.location.origin).pathname; } catch (e) { path = url; }
+            var id = "sat:" + path;
+
+            /* focus, don't duplicate */
+            var found = registry[id];
+            if (found && found.getState() !== "closed") {
+              if (found.getState() === "minimized") found.setState("normal");
+              found.raise();
+              found.el.focus();
+              return;
+            }
+
+            var step = (satCount % 5) * 28;
+            var win = document.createElement("div");
+            win.className = "window app-window app-window--sat";
+            win.setAttribute("data-window", "");
+            win.setAttribute("data-window-id", id);
+            win.setAttribute("data-window-title", title);
+            win.setAttribute("tabindex", "-1");
+            /* position via custom properties, not inline top/left, so a
+               maximized satellite's `inset` can still win the cascade */
+            win.style.setProperty("--sat-top", (76 + step) + "px");
+            win.style.setProperty("--sat-left", (72 + step) + "px");
+            win.innerHTML =
+              '<div class="titlebar">' +
+                '<svg class="titlebar__icon" aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>' +
+                '<span class="titlebar__title"></span>' +
+                '<span class="titlebar__btns">' +
+                  '<button type="button" class="win-btn" data-win="min" aria-label="Minimize" title="Minimize">_</button>' +
+                  '<button type="button" class="win-btn" data-win="max" aria-label="Maximize" title="Maximize">&#9633;</button>' +
+                  '<button type="button" class="win-btn" data-win="close" aria-label="Close" title="Close">&#10005;</button>' +
+                '</span>' +
+              '</div>' +
+              '<div class="window__body app-window__body">' +
+                '<div class="browser-bar">' +
+                  '<span class="browser-bar__url"></span>' +
+                  '<a class="btn browser-bar__go" target="_blank" rel="noopener noreferrer">Open &#8599;</a>' +
+                '</div>' +
+                '<iframe class="app-window__frame" loading="lazy" referrerpolicy="no-referrer"></iframe>' +
+              '</div>';
+            win.querySelector(".titlebar__title").textContent = title;
+            win.querySelector(".browser-bar__url").textContent = path;
+            win.querySelector(".browser-bar__go").setAttribute("href", url);
+            var fr = win.querySelector("iframe");
+            fr.setAttribute("title", title);
+            fr.setAttribute("data-frame-src", url + (url.indexOf("?") === -1 ? "?embed=1" : "&embed=1"));
+            document.body.appendChild(win);
+            /* satellites are transient, so never let a stale close or maximize
+               mark from an earlier instance change this fresh one */
+            setStoredClosed(id, false);
+            setStoredMax(id, false);
+            satCount++;
+            createWindow(win, "sat-" + satCount);
+            var newApi = registry[id];
+            if (newApi) { newApi.raise(); win.focus(); }
+          }
 
           /* launchers (Start menu items / desktop shortcuts) */
           document.querySelectorAll("[data-launch]").forEach(function (el) {
@@ -456,6 +563,19 @@ layout: compress
               var api = registry[el.getAttribute("data-launch")];
               if (!api) return;
               api.open();
+              if (startMenu) startMenu.removeAttribute("open");
+            });
+          });
+
+          /* shortcuts that open a page in a satellite window. The real href is
+             kept, so they still navigate when scripting is off, and modified
+             clicks (new tab, etc.) are left to the browser. */
+          document.querySelectorAll("[data-launch-url]").forEach(function (el) {
+            el.addEventListener("click", function (e) {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              openSatellite(el.getAttribute("data-launch-url"),
+                            el.getAttribute("data-launch-title") || el.textContent.trim());
               if (startMenu) startMenu.removeAttribute("open");
             });
           });

@@ -5,9 +5,9 @@
       <span class="start__label">Start</span>
     </summary>
     <div class="start__menu">
-      <a href="{{ '/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>Home</a>
-      <a href="{{ '/blog/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Blog</a>
-      <a href="{{ '/tags/' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Tags</a>
+      <a href="{{ '/' | relative_url }}" data-launch-url="{{ '/' | relative_url }}" data-launch-title="Home"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>Home</a>
+      <a href="{{ '/blog/' | relative_url }}" data-launch-url="{{ '/blog/' | relative_url }}" data-launch-title="Blog"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Blog</a>
+      <a href="{{ '/tags/' | relative_url }}" data-launch-url="{{ '/tags/' | relative_url }}" data-launch-title="Tags"><svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>Tags</a>
       <button type="button" data-launch="tamil"><svg aria-hidden="true"><use xlink:href="#icon-computer"></use></svg>தமிழ்</button>
       <hr>
       <a href="{{ '/feed.xml' | relative_url }}"><svg aria-hidden="true"><use xlink:href="#icon-rss"></use></svg>RSS feed</a>
