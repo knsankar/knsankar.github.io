@@ -1,0 +1,17 @@
+<div class="listview reading-list">
+    <div class="listview__head"><span>Title</span><span>Author</span><span>Status</span></div>
+    <ul class="reading-list__items">
+        {% for book in site.data.reading %}
+        <li class="reading-row">
+            <span class="reading-row__title">
+                {% if book.url %}<a href="{{ book.url }}" target="_blank" rel="noopener noreferrer">{{ book.title }}</a>{% else %}{{ book.title }}{% endif %}
+                {% if book.note %}<span class="reading-row__note">{{ book.note }}</span>{% endif %}
+            </span>
+            <span class="reading-row__author">{{ book.author }}</span>
+            <span class="reading-row__status reading-row__status--{{ book.status | downcase }}">{{ book.status | capitalize }}</span>
+        </li>
+        {% else %}
+        <li class="reading-row reading-row--empty">Nothing on the shelf yet.</li>
+        {% endfor %}
+    </ul>
+</div>

@@ -169,15 +169,21 @@
   height: auto !important;
   z-index: 50;
   transform: none !important;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .window.window--max .win-resize {
   display: none;
 }
 
-.window.window--max .window__body {
+/* stretch the client area so the body colour fills the maximized window
+   (same layout the resize state uses) */
+.window.window--max > .window__body {
+  flex: 1;
   min-height: 0;
+  overflow: auto;
 }
 
 /* ---- app window (floating desktop app, e.g. the framed Tamil site) ---- */
@@ -238,7 +244,9 @@
   width: 100%;
   min-height: 200px;
   border: 0;
-  background: #fff;
+  /* follows the theme: a framed page is transparent below its content, so this
+     is what shows in the slack when the window is taller than the page */
+  background: var(--win-bg);
 }
 
 /* ---- desktop shortcut icons (menu items, pinned in the left gutter) ---- */
@@ -315,11 +323,11 @@ html.embed body::before {
   display: none;
 }
 
+/* the Share popup is the one menu a framed page still needs */
 html.embed .skip-link,
 html.embed .desk-icons,
 html.embed .taskbar,
 html.embed .app-window,
-html.embed .ctx-menu,
 html.embed .props {
   display: none !important;
 }
@@ -343,4 +351,26 @@ html.embed .titlebar {
 html.embed .window__body {
   margin: 0;
   box-shadow: none;
+}
+
+/* when the satellite is maximized the frame is taller than the page it shows:
+   let the page fill the frame so its own footer band stays at the bottom of
+   the window instead of floating just under the content. The window manager
+   adds this state class, so a fit-to-content satellite is left untouched. */
+html.embed.embed-fill body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html.embed.embed-fill main,
+html.embed.embed-fill .wrap,
+html.embed.embed-fill .window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+html.embed.embed-fill .window__body {
+  flex: 1;
 }

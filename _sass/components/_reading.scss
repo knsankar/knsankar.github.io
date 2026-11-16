@@ -1,0 +1,78 @@
+/* ============================================================
+   reading — "Now Reading" shelf list (Title / Author / Status)
+   ============================================================ */
+
+.reading-list .listview__head {
+  grid-template-columns: 1fr 180px 110px;
+}
+
+.reading-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reading-list__items li + li {
+  border-top: 1px solid var(--bevel-face);
+}
+
+.reading-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 110px;
+  color: var(--win-text);
+}
+
+.reading-row > * {
+  padding: 6px 8px;
+}
+
+.reading-row__note {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: .74rem;
+}
+
+.reading-row__author {
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+
+.reading-row__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: center;
+  justify-self: start;
+  margin: 0 8px;
+  padding: 1px 7px;
+  background: var(--face);
+  color: var(--win-text);
+  font-size: .72rem;
+  @include bevel-raised;
+}
+
+.reading-row__status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--bevel-shadow);
+}
+
+.reading-row__status--reading::before  { background: #2f74c9; } /* blue   */
+.reading-row__status--queued::before   { background: #e0a800; } /* amber  */
+.reading-row__status--finished::before { background: #3f9c3f; } /* green  */
+
+.reading-row--empty {
+  display: block;
+  grid-template-columns: none;
+  padding: 8px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 520px) {
+  .reading-list .listview__head { display: none; }
+  .reading-row { grid-template-columns: 1fr; }
+  .reading-row__status { margin: 0 0 6px; }
+}

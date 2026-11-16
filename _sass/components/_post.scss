@@ -13,13 +13,51 @@
   font-size: var(--step-3);
 }
 
+/* the classic "#" permalink, tucked after the title */
+.post-head__perm {
+  margin-left: .3em;
+  font-size: .58em;
+  font-weight: 400;
+  vertical-align: .18em;
+  color: var(--text-muted);
+  text-decoration: none;
+  opacity: .45;
+}
+
+.post-head__perm:hover,
+.post-head__perm:focus {
+  color: var(--link);
+  opacity: 1;
+  text-decoration: underline;
+}
+
 .post-meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--sp-4);
   font-family: var(--font-ui);
   font-size: .78rem;
   color: var(--text-muted);
+}
+
+/* icon-only share button: square, and the glyph flashes to the link colour
+   once the permalink lands on the clipboard */
+.btn--share {
+  padding: 6px 8px;
+}
+
+/* keep the 1px press nudge of .btn without the wider text-button inset */
+.btn--share:active {
+  padding: 7px 7px 5px 9px;
+}
+
+.btn--share svg {
+  fill: currentColor;
+}
+
+.btn--share.is-copied svg {
+  fill: var(--link);
 }
 
 /* TL;DR / summary group box */

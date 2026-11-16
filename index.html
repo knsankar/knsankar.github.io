@@ -1,23 +1,6 @@
 ---
-layout: window
+layout: default
 title: Home
-window_title: Welcome
 ---
-<h1>{{ site.title }}</h1>
-<p class="lede">{{ site.description }} Readable by humans and, increasingly, by their agents.</p>
-
-<section class="feed">
-    <h2 class="section-label">Latest</h2>
-    <div class="listview">
-        <div class="listview__head"><span>Date</span><span>Title</span></div>
-        <ul class="post-list">
-            {% for post in site.posts limit: 5 %}
-                {% unless post.hidden %}{% include blog-post.html %}{% endunless %}
-            {% else %}
-                <li><a href="{{ '/blog/' | relative_url }}"><span class="post-row__date">—</span><span class="post-row__title">Nothing published yet.</span></a></li>
-            {% endfor %}
-        </ul>
-    </div>
-</section>
-
-<p class="text-center"><a class="btn" href="{{ '/blog/' | relative_url }}">All posts &raquo;</a></p>
+<h1 class="visually-hidden">{{ site.title }}</h1>
+<p class="visually-hidden">{{ site.description }} Readable by humans and, increasingly, by their agents. Click a desktop icon to open a section.</p>

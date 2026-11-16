@@ -1,0 +1,23 @@
+# Now Reading — hand-curated shelf.
+# Each entry: title (required), author (required), status (reading|finished|queued),
+# optional url (link to the book) and note (short remark).
+# Empty list is fine — the site shows "Nothing on the shelf yet."
+- title: "Algorithms to Live By: The Computer Science of Human Decisions"
+  author: Brian Christian, Tom Griffiths
+  status: reading
+  url: https://www.goodreads.com/book/show/29379196-algorithms-to-live-by
+- title: "The Essential Marcus Aurelius"
+  author: Marcus Aurelius, Jacob Needleman, John Piazza
+  status: reading
+  url: https://www.goodreads.com/book/show/8412072-the-essential-marcus-aurelius
+- title: "Intelligence-Driven Incident Response: Outwitting the Adversary"
+  author: Scott J. Roberts, Rebekah Brown
+  status: reading
+  url: https://www.goodreads.com/book/show/177649076-intelligence-driven-incident-response
+# Example entries:
+# - title: Designing Data-Intensive Applications
+#   author: Martin Kleppmann
+#   status: finished
+# - title: Security Engineering
+#   author: Ross Anderson
+#   status: queued
