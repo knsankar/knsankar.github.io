@@ -12,7 +12,7 @@
 
 .listview__head {
   display: grid;
-  grid-template-columns: 132px 1fr;
+  grid-template-columns: 64px 132px 1fr;
   background: var(--face);
   border-bottom: 1px solid var(--bevel-shadow);
 }
@@ -24,7 +24,7 @@
 
 .listview__head span + span {
   border-left: 1px solid var(--bevel-shadow);
-  box-shadow: inset 1px 0 var(--bevel-light);
+  box-shadow: inset 1px 0 var(--bevel-face);
 }
 
 .post-list {
@@ -39,7 +39,7 @@
 
 .post-list li a {
   display: grid;
-  grid-template-columns: 132px 1fr;
+  grid-template-columns: 64px 132px 1fr;
   color: var(--win-text);
   text-decoration: none;
 }
@@ -78,7 +78,16 @@
   }
 
   .post-list li a {
-    grid-template-columns: 1fr;
+    grid-template-columns: 64px 1fr;
+  }
+
+  .post-list .post-thumb {
+    grid-row: 1 / span 2;
+  }
+
+  .post-row__date,
+  .post-row__title {
+    grid-column: 2;
   }
 
   .post-row__date {

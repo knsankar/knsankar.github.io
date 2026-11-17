@@ -1,0 +1,4 @@
+{%- assign thumb_topic = include.post.categories | first -%}
+{%- unless thumb_topic %}{% assign thumb_topic = include.post.tags | first %}{% endunless -%}
+{%- unless thumb_topic %}{% assign thumb_topic = "notes" %}{% endunless -%}
+<span class="post-thumb post-thumb--{{ thumb_topic | slugify }}" aria-hidden="true">{% if include.post.thumbnail %}{% if include.post.thumbnail contains '://' %}<img src="{{ include.post.thumbnail }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% else %}<img src="{{ include.post.thumbnail | relative_url }}" alt="" loading="lazy" decoding="async">{% endif %}{% else %}{{ thumb_topic | slice: 0 | upcase }}{% endif %}</span>

@@ -1,8 +1,9 @@
 <div class="listview reading-list">
-    <div class="listview__head"><span>Title</span><span>Author</span><span>Status</span></div>
+    <div class="listview__head"><span></span><span>Title</span><span>Author</span><span>Status</span></div>
     <ul class="reading-list__items">
         {% for book in site.data.reading %}
         <li class="reading-row">
+            <span class="reading-row__cover">{% if book.cover %}<img src="{{ book.cover }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% endif %}</span>
             <span class="reading-row__title">
                 {% if book.url %}<a href="{{ book.url }}" target="_blank" rel="noopener noreferrer">{{ book.title }}</a>{% else %}{{ book.title }}{% endif %}
                 {% if book.note %}<span class="reading-row__note">{{ book.note }}</span>{% endif %}

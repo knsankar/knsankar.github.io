@@ -41,6 +41,8 @@ body::before {
   pointer-events: none;
   background-color: var(--sky-bottom);
   background-image:
+    /* Bliss hill — in front of the cloud bands; transparent at night */
+    radial-gradient(ellipse 140% 58% at 50% 112%, var(--hill-top) 0 52%, var(--hill-bottom) 68%, transparent 69%),
     /* upper-left cloud bank */
     radial-gradient(ellipse 340px 130px at 14% 24%, var(--cloud-strong), transparent 70%),
     radial-gradient(ellipse 240px 96px at 27% 31%, var(--cloud-mid), transparent 72%),
@@ -68,7 +70,7 @@ img {
 }
 
 :focus-visible {
-  outline: 1px dotted var(--win-text);
+  outline: 1px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -83,12 +85,11 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--face);
+  background-color: var(--face);
+  background-image: linear-gradient(180deg, var(--btn-a), var(--btn-b));
   box-shadow:
-    inset -1px -1px var(--bevel-dark),
-    inset 1px 1px var(--bevel-light),
-    inset -2px -2px var(--bevel-shadow),
-    inset 2px 2px var(--bevel-face);
+    inset 0 1px var(--btn-gloss),
+    inset 0 -1px rgba(0, 0, 0, .18);
 }
 
 ::-webkit-scrollbar-corner {

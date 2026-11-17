@@ -66,8 +66,7 @@
   margin: 0 0 var(--sp-6);
   padding: var(--sp-5);
   background: var(--win-bg);
-  border: 1px solid var(--bevel-shadow);
-  @include bevel-groove;
+  border: 1px solid var(--bevel-face);
 }
 
 .summary__label {
@@ -112,7 +111,7 @@
   font-size: .85rem;
   line-height: 1.6;
   overflow: auto;
-  @include bevel-sunken;
+  @include xp-inset;
 }
 
 .prose pre code {

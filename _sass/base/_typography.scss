@@ -56,11 +56,11 @@ samp {
   font-family: var(--font-mono);
 }
 
-/* Win95 groove rule */
+/* groove rule — XP tones (dark top edge, soft light bottom edge) */
 hr {
   border: 0;
   border-top: 1px solid var(--bevel-shadow);
-  border-bottom: 1px solid var(--bevel-light);
+  border-bottom: 1px solid var(--bevel-face);
   margin: var(--sp-7) 0;
 }
 

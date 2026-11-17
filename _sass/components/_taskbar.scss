@@ -13,10 +13,12 @@
   align-items: stretch;
   gap: 4px;
   padding: 3px;
-  background: var(--face);
+  background: linear-gradient(180deg, var(--taskbar-a), var(--taskbar-b));
+  box-shadow:
+    inset 0 1px var(--taskbar-gloss),
+    inset 0 -1px rgba(0, 0, 0, .35);
   font-family: var(--font-ui);
   font-size: .8rem;
-  @include bevel-raised;
 }
 
 /* ---- Start button ---- */
@@ -33,9 +35,12 @@
   gap: 6px;
   padding: 4px 12px 4px 8px;
   font-weight: 700;
-  color: var(--win-text);
-  background: var(--face);
-  @include bevel-raised;
+  color: var(--title-text);
+  background: linear-gradient(180deg, var(--start-a), var(--start-b));
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 1px var(--start-gloss),
+    inset 0 -1px rgba(0, 0, 0, .25);
 }
 
 .start > summary::-webkit-details-marker {
@@ -43,7 +48,8 @@
 }
 
 .start[open] > summary {
-  @include bevel-sunken;
+  background-image: linear-gradient(180deg, var(--start-b), var(--start-a));
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .3);
 }
 
 .start__flag {
@@ -61,8 +67,7 @@
   display: flex;
   flex-direction: column;
   padding: 3px;
-  background: var(--face);
-  @include bevel-raised;
+  @include xp-panel;
 }
 
 .start__menu a,
@@ -98,7 +103,6 @@
 .start__menu hr {
   border: 0;
   border-top: 1px solid var(--bevel-shadow);
-  border-bottom: 1px solid var(--bevel-light);
   margin: 3px 2px;
 }
 
@@ -122,19 +126,18 @@
   gap: 6px;
   max-width: 168px;
   padding: 4px 10px;
-  background: var(--face);
-  color: var(--win-text);
+  color: var(--title-text);
   font-size: .8rem;
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
-  @include bevel-raised;
+  @include xp-blue-btn;
 }
 
 .task:hover,
 .task:focus {
-  background: var(--face);
-  color: var(--win-text);
+  color: var(--title-text);
+  filter: brightness(1.15);
 }
 
 .task svg {
@@ -143,10 +146,12 @@
   flex-shrink: 0;
 }
 
+/* the pressed task — darker blue, inset. The Win95 45° hatch is gone. */
 .task--active {
   font-weight: 700;
-  @include bevel-sunken;
-  background-image: repeating-linear-gradient(45deg, var(--bevel-face) 0 1px, var(--face) 1px 2px);
+  color: var(--title-text);
+  background-image: linear-gradient(180deg, var(--taskbar-b), var(--taskbar-a));
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .35);
 }
 
 /* window task button (appears while the page window is open) */
@@ -168,15 +173,16 @@
   align-items: center;
   gap: 6px;
   padding: 3px 8px;
-  background: var(--face);
-  @include bevel-field;
+  background: linear-gradient(180deg, var(--taskbar-b), var(--taskbar-a));
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .35);
 }
 
 .clock {
   min-width: 54px;
   text-align: center;
   font-size: .78rem;
-  color: var(--win-text);
+  color: var(--title-text);
 }
 
 @media (max-width: 520px) {
@@ -213,11 +219,10 @@
   max-height: calc(100vh - 8px);
   overflow: auto;
   padding: 3px;
-  background: var(--face);
   color: var(--win-text);
   font-family: var(--font-ui);
   font-size: .82rem;
-  @include bevel-raised;
+  @include xp-panel;
 }
 
 .ctx-menu[hidden] {
@@ -260,15 +265,14 @@
 }
 
 .ctx-menu__item:disabled {
-  color: var(--bevel-shadow);
-  text-shadow: 1px 1px var(--bevel-light);
+  /* XP disabled menu items are flat muted greys, not Win95 embossed text */
+  color: var(--text-muted);
 }
 
 .ctx-menu__sep {
   height: 0;
   margin: 3px 2px;
   border-top: 1px solid var(--bevel-shadow);
-  border-bottom: 1px solid var(--bevel-light);
 }
 
 /* ============================================================
@@ -284,11 +288,10 @@
   width: min(340px, calc(100vw - 32px));
   transform: translate(-50%, -50%);
   padding: 3px;
-  background: var(--face);
   color: var(--win-text);
   font-family: var(--font-ui);
   font-size: .82rem;
-  @include bevel-raised;
+  @include xp-panel;
 }
 
 .props[hidden] {
@@ -307,7 +310,7 @@
   padding: var(--sp-4);
   background: var(--win-bg);
   color: var(--win-text);
-  @include bevel-sunken;
+  @include xp-inset;
 }
 
 .props__row {

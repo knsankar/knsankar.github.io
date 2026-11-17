@@ -1,9 +1,9 @@
 /* ============================================================
-   reading — "Now Reading" shelf list (Title / Author / Status)
+   reading — "Now Reading" shelf list (Cover / Title / Author / Status)
    ============================================================ */
 
 .reading-list .listview__head {
-  grid-template-columns: 1fr 180px 110px;
+  grid-template-columns: 60px 1fr 180px 110px;
 }
 
 .reading-list__items {
@@ -18,12 +18,31 @@
 
 .reading-row {
   display: grid;
-  grid-template-columns: 1fr 180px 110px;
+  grid-template-columns: 60px 1fr 180px 110px;
   color: var(--win-text);
 }
 
 .reading-row > * {
   padding: 6px 8px;
+}
+
+/* the slot always renders, so a book with no cover shows an empty framed box
+   rather than collapsing the column out of alignment with the header */
+.reading-row > .reading-row__cover {
+  justify-self: center;
+  align-self: center;
+  width: 44px;
+  height: 60px;
+  margin: 6px 8px;
+  padding: 0;                        /* two classes beat `.reading-row > *` on specificity, not source order */
+  background: var(--win-bg);
+  border: 1px solid var(--field-border);
+}
+
+.reading-row__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;               /* never crop a cover */
 }
 
 .reading-row__note {
@@ -49,7 +68,7 @@
   background: var(--face);
   color: var(--win-text);
   font-size: .72rem;
-  @include bevel-raised;
+  @include bevel-field;
 }
 
 .reading-row__status::before {
@@ -73,6 +92,10 @@
 
 @media (max-width: 520px) {
   .reading-list .listview__head { display: none; }
-  .reading-row { grid-template-columns: 1fr; }
+  .reading-row { grid-template-columns: 60px 1fr; }
+  .reading-row__cover { grid-row: 1 / span 3; }
+  .reading-row__title,
+  .reading-row__author,
+  .reading-row__status { grid-column: 2; }
   .reading-row__status { margin: 0 0 6px; }
 }

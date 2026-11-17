@@ -9,12 +9,12 @@ permalink: /blog/
 
 <section class="feed">
     <div class="listview">
-        <div class="listview__head"><span>Date</span><span>Title</span></div>
+        <div class="listview__head"><span></span><span>Date</span><span>Title</span></div>
         <ul class="post-list">
             {% for post in site.posts %}
                 {% unless post.hidden %}{% include blog-post.html %}{% endunless %}
             {% else %}
-                <li><a href="{{ '/' | relative_url }}"><span class="post-row__date">—</span><span class="post-row__title">Nothing published yet.</span></a></li>
+                <li><a href="{{ '/' | relative_url }}"><span class="post-thumb" aria-hidden="true">—</span><span class="post-row__date">—</span><span class="post-row__title">Nothing published yet.</span></a></li>
             {% endfor %}
         </ul>
     </div>

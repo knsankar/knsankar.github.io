@@ -1,19 +1,29 @@
 # Now Reading — hand-curated shelf.
 # Each entry: title (required), author (required), status (reading|finished|queued),
-# optional url (link to the book) and note (short remark).
+# optional url (link to the book), cover (thumbnail image URL) and note (short remark).
+# Omit cover and the row shows an empty framed slot.
 # Empty list is fine — the site shows "Nothing on the shelf yet."
 - title: "Algorithms to Live By: The Computer Science of Human Decisions"
   author: Brian Christian, Tom Griffiths
   status: reading
   url: https://www.goodreads.com/book/show/29379196-algorithms-to-live-by
+  cover: https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1513457679i/29379196._SY180_.jpg
 - title: "The Essential Marcus Aurelius"
   author: Marcus Aurelius, Jacob Needleman, John Piazza
   status: reading
   url: https://www.goodreads.com/book/show/8412072-the-essential-marcus-aurelius
+  cover: https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1275934371i/8412072._SY180_.jpg
 - title: "Intelligence-Driven Incident Response: Outwitting the Adversary"
   author: Scott J. Roberts, Rebekah Brown
   status: reading
   url: https://www.goodreads.com/book/show/177649076-intelligence-driven-incident-response
+  cover: https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1688595689i/177649076._SY180_.jpg
+- title: "The Death of Ivan Ilyich"
+  author: Leo Tolstoy
+  status: finished
+  url: https://www.goodreads.com/book/show/204879629
+  cover: https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723169986i/204879629._SY180_.jpg
+  note: Read in 2025
 # Example entries:
 # - title: Designing Data-Intensive Applications
 #   author: Martin Kleppmann

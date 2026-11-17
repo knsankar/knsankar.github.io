@@ -1,41 +1,75 @@
 /* ============================================================
-   Windows 95/98 "Chicago" — design tokens
-   The classic silver/teal desktop is the default; the dark
-   variant is a Win95 High-Contrast desktop, opted into via the
-   toggle or the OS setting when no explicit choice was made.
+   Windows XP "Luna" — design tokens
+   Light is Luna Blue over the Bliss wallpaper; dark is
+   "Luna Noir", a night-flavoured XP palette over the Clouds-at-
+   night wallpaper. Opted into via the toggle or the OS setting
+   when no explicit choice was made.
    ============================================================ */
 
-/* ---- bevels (pure CSS, no images) ------------------------- */
+/* ---- XP Luna controls (pure CSS, no images) ----------------
+   Four public names are kept so every existing consumer converts
+   at once; they delegate to these XP implementations. */
 
-@mixin bevel-raised {
+@mixin xp-raised {
+  background-image: linear-gradient(180deg, var(--btn-a), var(--btn-b));
+  border-radius: var(--radius);
   box-shadow:
-    inset -1px -1px var(--bevel-dark),
-    inset 1px 1px var(--bevel-light),
-    inset -2px -2px var(--bevel-shadow),
-    inset 2px 2px var(--bevel-face);
+    inset 0 1px var(--btn-gloss),
+    inset 0 -1px rgba(0, 0, 0, .18),
+    0 0 0 1px var(--frame-b);
 }
 
-@mixin bevel-sunken {
-  box-shadow:
-    inset -1px -1px var(--bevel-light),
-    inset 1px 1px var(--bevel-shadow),
-    inset -2px -2px var(--bevel-face),
-    inset 2px 2px var(--bevel-dark);
+@mixin xp-sunken {
+  background-image: linear-gradient(180deg, var(--btn-b), var(--btn-a));
+  border-radius: var(--radius);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .28);
 }
 
-/* thin sunken field — inputs, list views, status bar segments */
-@mixin bevel-field {
+/* blue chrome button — taskbar task buttons and titlebar window buttons,
+   which sit on blue surfaces and are not the neutral face button */
+@mixin xp-blue-btn {
+  background-image: linear-gradient(180deg, var(--taskbar-a), var(--taskbar-b));
+  border-radius: var(--radius);
   box-shadow:
-    inset -1px -1px var(--bevel-light),
-    inset 1px 1px var(--bevel-shadow);
+    inset 0 1px var(--taskbar-gloss),
+    inset 0 -1px rgba(0, 0, 0, .3),
+    0 0 0 1px var(--frame-b);
+}
+
+/* inset content well — client areas and code blocks. No gradient: the
+   consumer's own background (--win-bg, --dos-bg, …) must stay visible. */
+@mixin xp-inset {
+  border-radius: var(--radius);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .28);
+}
+
+/* thin XP text input / list surface */
+@mixin xp-field {
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
 }
 
 /* etched groove — group boxes (outer dark top-left, inner light) */
-@mixin bevel-groove {
-  box-shadow: inset 1px 1px var(--bevel-light);
+@mixin xp-groove {
+  box-shadow: inset 1px 1px var(--bevel-face);
 }
 
-/* ---- Win95 High-Contrast (dark) --------------------------- */
+/* XP panel — windows, dialogs and menus. Deliberately NOT the button gloss:
+   these surfaces used to call bevel-raised but are not controls. */
+@mixin xp-panel {
+  background: var(--face);
+  border: 1px solid var(--frame-b);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+
+/* the public names delegate — every existing consumer updates at once */
+@mixin bevel-raised { @include xp-raised; }
+@mixin bevel-sunken { @include xp-sunken; }
+@mixin bevel-field  { @include xp-field;  }
+@mixin bevel-groove { @include xp-groove; }
+
+/* ---- XP "Luna Noir" (dark) -------------------------------- */
 
 @mixin dark-tokens {
   /* "Clouds" wallpaper at night — near-black sky, barely-there wisps */
@@ -44,59 +78,85 @@
   --cloud-strong: rgba(150, 180, 220, .12);
   --cloud-mid: rgba(150, 180, 220, .075);
   --cloud-soft: rgba(150, 180, 220, .045);
+  --hill-top: transparent;
+  --hill-bottom: transparent;
 
-  --face: #3a3a3a;
-  --bevel-light: #6a6a6a;
-  --bevel-face: #4a4a4a;
-  --bevel-shadow: #1c1c1c;
-  --bevel-dark: #000000;
+  --face: #2b2f38;
+  --bevel-face: #3a3f4a;
+  --bevel-shadow: #11141a;
 
-  --win-bg: #1e1e1e;
-  --win-text: #d8d8d8;
-  --text-muted: #a0a0a0;
+  --win-bg: #1b1d22;
+  --win-text: #e2e2e2;
+  --text-muted: #a6a6a6;
 
-  --title-a: #000040;
-  --title-b: #104080;
+  --title-a: #1b3a6b;
+  --title-b: #12294f;
   --title-text: #ffffff;
-  --title-off-a: #2a2a2a;
-  --title-off-b: #4a4a4a;
 
   --sel-bg: #2a6fd6;
   --sel-text: #ffffff;
 
   --link: #6fb3ff;
   --link-visited: #c39bff;
+
+  /* ---- XP Luna Noir chrome ---- */
+  --radius: 3px;
+  --taskbar-a: #1b2a44;
+  --taskbar-b: #16223a;
+  --taskbar-gloss: #3f5f8f;
+  --frame-b: #1b3a6b;
+  --btn-a: #3a3f4a;
+  --btn-b: #23262d;
+  --btn-gloss: rgba(255, 255, 255, .10);
+  --field-border: #55607a;
+  --start-a: #2f7a2f;
+  --start-b: #1b4d1b;
+  --start-gloss: rgba(255, 255, 255, .18);
+  --accent: #2a6fd6;
 }
 
 :root {
-  /* ---- desktop wallpaper: "Clouds" (Win95 Plus!) — classic daytime sky ---- */
-  --sky-top: #2f74c9;
-  --sky-bottom: #0d3f86;
+  /* ---- desktop wallpaper: "Bliss" (XP) — deep blue sky, pale horizon ---- */
+  --sky-top: #1e6fd0;
+  --sky-bottom: #8fc3f0;
   --cloud-strong: rgba(255, 255, 255, .9);
   --cloud-mid: rgba(255, 255, 255, .68);
   --cloud-soft: rgba(255, 255, 255, .45);
+  --hill-top: #4c9a3a;
+  --hill-bottom: #2f6b22;
 
-  --face: #c0c0c0;
-  --bevel-light: #ffffff;
-  --bevel-face: #dfdfdf;
-  --bevel-shadow: #808080;
-  --bevel-dark: #000000;
+  --face: #ece9d8;
+  --bevel-face: #d5d2c8;
+  --bevel-shadow: #a0a0a0;
 
   --win-bg: #ffffff;
   --win-text: #000000;
   --text-muted: #5a5a5a;
 
-  --title-a: #000080;
-  --title-b: #1084d0;
+  --title-a: #0a53d0;
+  --title-b: #3a93ff;
   --title-text: #ffffff;
-  --title-off-a: #808080;
-  --title-off-b: #b5b5b5;
 
-  --sel-bg: #000080;
+  --sel-bg: #316ac5;
   --sel-text: #ffffff;
 
   --link: #0000ee;
   --link-visited: #551a8b;
+
+  /* ---- XP Luna Blue chrome ---- */
+  --radius: 3px;
+  --taskbar-a: #245edb;
+  --taskbar-b: #1941a5;
+  --taskbar-gloss: #3f8cf3;
+  --frame-b: #3a93ff;
+  --btn-a: #ffffff;
+  --btn-b: #c9c4b8;
+  --btn-gloss: rgba(255, 255, 255, .9);
+  --field-border: #7f9db9;
+  --start-a: #2f7a2f;
+  --start-b: #1b4d1b;
+  --start-gloss: rgba(255, 255, 255, .55);
+  --accent: #316ac5;
 
   /* ---- MS-DOS Prompt panel (always a dark console) ---- */
   --dos-bg: #000000;
@@ -140,7 +200,7 @@
   --wrap-wide: 1040px;
 
   /* fixed taskbar height (body padding + anchor offsets) */
-  --taskbar-h: 48px;
+  --taskbar-h: 30px;
 }
 
 :root[data-theme="dark"] {

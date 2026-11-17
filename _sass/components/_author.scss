@@ -9,8 +9,7 @@
   gap: var(--sp-5);
   margin: var(--sp-7) 0;
   padding: var(--sp-6) var(--sp-5) var(--sp-5);
-  border: 1px solid var(--bevel-shadow);
-  @include bevel-groove;
+  border: 1px solid var(--bevel-face);
 }
 
 .author h4 {

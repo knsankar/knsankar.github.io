@@ -117,9 +117,23 @@ layout: compress
           if (icon) icon.textContent = c === "dark" ? "\u263E" : "\u2600";
           btn.setAttribute("aria-pressed", c === "dark" ? "true" : "false");
         }
+        /* Satellite windows hold their own documents, so they never see this
+           page's data-theme attribute — push it into every same-origin frame so
+           an open blog/tags/reading window follows the toggle instead of
+           needing to be closed and reopened. Cross-origin frames (the Tamil
+           mirror) expose a null contentDocument and are skipped. */
+        function syncFrames(name) {
+          var frames = document.querySelectorAll("iframe");
+          for (var i = 0; i < frames.length; i++) {
+            var doc;
+            try { doc = frames[i].contentDocument; } catch (e) { doc = null; }
+            if (doc && doc.documentElement) doc.documentElement.setAttribute("data-theme", name);
+          }
+        }
         function setTheme(name, persist) {
           root.setAttribute("data-theme", name);
           if (persist) { try { localStorage.setItem("win95-theme", name); } catch (e) {} }
+          syncFrames(name);
           syncThemeUI();
         }
         var themeBtn = document.getElementById("theme-toggle");

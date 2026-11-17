@@ -16,8 +16,8 @@
   display: inline-flex;
   gap: 1px;
   padding: 1px;
-  background: var(--bevel-dark);
-  @include bevel-sunken;
+  background: var(--dos-bg);
+  @include xp-inset;
 }
 
 .counter__digit {

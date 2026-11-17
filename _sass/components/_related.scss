@@ -6,8 +6,7 @@
   position: relative;
   margin: var(--sp-7) 0;
   padding: var(--sp-6) var(--sp-5) var(--sp-4);
-  border: 1px solid var(--bevel-shadow);
-  @include bevel-groove;
+  border: 1px solid var(--bevel-face);
 }
 
 .related h4 {
@@ -35,7 +34,9 @@
 }
 
 .related a {
-  display: block;
-  padding: 6px 4px;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  padding: 0 4px;
   color: var(--link);
 }

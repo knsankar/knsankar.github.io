@@ -20,10 +20,16 @@
   @include bevel-raised;
 }
 
+/* the global `a:hover, a:focus` rule paints links with --sel-bg using the
+   `background` shorthand, which resets background-image — so the gradient has
+   to be re-asserted here, at a specificity that beats it (both on :hover and on
+   the more specific a.btn:visited). Without this the gradient is wiped and the
+   button deflates on hover / renders flat once visited. */
 .btn:hover,
 .btn:focus,
 a.btn:visited {
   background: var(--face);
+  @include bevel-raised;
   color: var(--win-text);
 }
 
@@ -54,7 +60,7 @@ a.btn:visited {
 }
 
 .field:focus {
-  outline: 1px dotted var(--bevel-dark);
+  outline: 1px solid var(--accent);
   outline-offset: -4px;
 }
 
@@ -74,15 +80,11 @@ a.btn:visited {
   font-family: var(--font-ui);
   font-size: .8rem;
   color: var(--win-text);
-  background: var(--face);
   padding: 5px 12px 7px;
   text-decoration: none;
-  @include bevel-raised;
-  box-shadow:
-    inset 0 1px var(--bevel-light),
-    inset 1px 0 var(--bevel-light),
-    inset -1px 0 var(--bevel-dark),
-    inset 2px 0 var(--bevel-face);
+  @include xp-raised;
+  /* XP property-sheet tabs square off at the bottom, where they meet the page */
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .tab:hover,
@@ -131,7 +133,9 @@ a.btn:visited {
   gap: 6px;
   padding: 3px 8px;
   background: var(--face);
-  @include bevel-field;
+  /* XP status-bar panels are flat and sunken, not bordered fields: xp-field's
+     1px border would add 1px per segment and push narrow pages into overflow */
+  @include xp-inset;
 }
 
 .statusbar__seg--grow {

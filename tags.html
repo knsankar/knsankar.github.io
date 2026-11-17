@@ -16,11 +16,12 @@ permalink: /tags/
 <section class="tag-panel" id="{{ tag[0] | slugify }}">
     <h2 class="section-label">{{ tag[0] }}<span class="tag__count">{{ tag[1] | size }}</span></h2>
     <div class="listview">
-        <div class="listview__head"><span>Date</span><span>Title</span></div>
+        <div class="listview__head"><span></span><span>Date</span><span>Title</span></div>
         <ul class="post-list">
             {% for post in tag[1] reversed %}
             <li>
                 <a href="{{ post.url | relative_url }}">
+                    {% include post-thumb.html post=post %}
                     <span class="post-row__date">{{ post.date | date: "%Y-%m-%d" }}</span>
                     <span class="post-row__title">{{ post.title }}</span>
                 </a>

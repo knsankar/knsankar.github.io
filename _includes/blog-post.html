@@ -1,5 +1,6 @@
 <li>
   <a href="{{ post.url | relative_url }}">
+    {% include post-thumb.html post=post %}
     <span class="post-row__date">{{ post.date | date: "%Y-%m-%d" }}</span>
     <span class="post-row__title">{{ post.title }}{% if site.read-time %} <span class="post-row__meta">{% include read-time.html content=post.content %}</span>{% endif %}</span>
   </a>

@@ -6,7 +6,7 @@
         {% if page.tags contains tag %}{% assign common = common | plus: 1 %}{% endif %}
       {% endfor %}
       {% if common > 0 %}
-        <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+        <li><a href="{{ post.url | relative_url }}">{% include post-thumb.html post=post %}<span class="related__title">{{ post.title }}</span></a></li>
       {% endif %}
     {% endif %}
   {% endfor %}

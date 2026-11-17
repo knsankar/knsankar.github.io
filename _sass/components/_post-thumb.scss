@@ -1,0 +1,40 @@
+/* ============================================================
+   post thumb — leading 48×48 tile on every post row
+   ============================================================ */
+
+.post-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  align-self: center;
+  width: 48px;
+  height: 48px;
+  margin: 6px 8px;
+  background: var(--face);
+  color: var(--win-text);
+  border: 1px solid var(--field-border);
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1;
+  overflow: hidden;
+}
+
+/* two classes beat `.post-list li a > *` (0,1,2) on specificity, not source order */
+.post-list li a > .post-thumb {
+  padding: 0;
+}
+
+.post-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;               /* never crop or distort a thumbnail */
+}
+
+/* topic tints — a literal hex pair, matching the `.reading-row__status--*` idiom.
+   Adding a topic is one line; unknown topics fall through to the themed default. */
+.post-thumb--postgresql {             /* blue */
+  background: #2f74c9;
+  color: #fff;
+}

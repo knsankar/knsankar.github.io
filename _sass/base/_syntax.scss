@@ -6,7 +6,7 @@
   background: var(--dos-bg);
   color: var(--dos-text);
   overflow: auto;
-  @include bevel-sunken;
+  @include xp-inset;
 
   /* faux console title bar — only on the wrapper, not the inner <pre class="highlight"> */
   &:not(pre)::before {

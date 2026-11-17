@@ -6,8 +6,7 @@
   position: relative;
   margin: var(--sp-4) 0;
   padding: 3px;
-  background: var(--face);
-  @include bevel-raised;
+  @include xp-panel;
 }
 
 .titlebar {
@@ -20,6 +19,7 @@
   padding: 2px 3px 2px 4px;
   background: linear-gradient(90deg, var(--title-a), var(--title-b));
   color: var(--title-text);
+  border-radius: var(--radius) var(--radius) 0 0;
   font-family: var(--font-ui);
   font-weight: 700;
   font-size: .84rem;
@@ -57,25 +57,27 @@
   font-family: var(--font-ui);
   font-size: 10px;
   line-height: 1;
-  color: var(--win-text);
-  background: var(--face);
+  color: var(--title-text);
   border: 0;
   padding: 0;
   cursor: pointer;
-  @include bevel-raised;
+  @include xp-blue-btn;
 }
 
 .win-btn:active {
-  @include bevel-sunken;
+  background-image: linear-gradient(180deg, var(--taskbar-b), var(--taskbar-a));
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .35);
 }
 
 .win-btn:focus-visible {
-  outline: 1px dotted var(--bevel-dark);
+  outline: 1px solid var(--accent);
   outline-offset: -3px;
 }
 
+/* XP's close button is the one red titlebar button */
 .win-btn[data-win="close"] {
   margin-left: 2px;
+  background-image: linear-gradient(180deg, #f08a72, #c4452b);
 }
 
 /* ---- client area ---- */
@@ -84,7 +86,7 @@
   padding: var(--sp-5) var(--sp-5) var(--sp-6);
   background: var(--win-bg);
   color: var(--win-text);
-  @include bevel-sunken;
+  @include xp-inset;
 }
 
 /* ---- resize grips: right edge, bottom edge, bottom-right corner ---- */
@@ -119,16 +121,21 @@
   cursor: nwse-resize;
 }
 
-/* the classic Win95 corner grip */
+/* XP's resize grip: a dotted triangle, not Win95's solid corner bracket */
 .win-resize--se::after {
   content: "";
   position: absolute;
   right: 3px;
   bottom: 3px;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid var(--bevel-shadow);
-  border-bottom: 2px solid var(--bevel-shadow);
+  width: 11px;
+  height: 11px;
+  background-image:
+    radial-gradient(circle at 9px 9px, var(--bevel-shadow) 0 1px, transparent 1px),
+    radial-gradient(circle at 5px 9px, var(--bevel-shadow) 0 1px, transparent 1px),
+    radial-gradient(circle at 1px 9px, var(--bevel-shadow) 0 1px, transparent 1px),
+    radial-gradient(circle at 9px 5px, var(--bevel-shadow) 0 1px, transparent 1px),
+    radial-gradient(circle at 5px 5px, var(--bevel-shadow) 0 1px, transparent 1px),
+    radial-gradient(circle at 9px 1px, var(--bevel-shadow) 0 1px, transparent 1px);
 }
 
 /* once a window has been resized it becomes a flex column, so the client
@@ -292,8 +299,10 @@
   text-shadow: none;
 }
 
+/* the desktop icons sit on the wallpaper, where --accent has too little
+   contrast, so this ring stays white — but solid, like the rest of the site */
 .desktop-icon:focus-visible {
-  outline: 1px dotted #fff;
+  outline: 1px solid #fff;
   outline-offset: 2px;
 }
 
@@ -340,6 +349,7 @@ html.embed .wrap {
 html.embed .window {
   margin: 0;
   padding: 0;
+  border: 0;
   background: none;
   box-shadow: none;
 }
