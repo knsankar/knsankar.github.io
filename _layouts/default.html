@@ -212,16 +212,30 @@ layout: compress
             } catch (e) {}
           }
 
-          /* a maximized window stays maximized while you browse, per tab */
+          /* a maximized window stays maximized while you browse, per tab.
+             Three states: the key is absent (never chose), "1" (chose
+             maximized) or "0" (chose restored) — so a phone can supply its
+             own default without overriding a deliberate restore. */
           var MAX_KEY = "win95-maximized:";
           function storedMax(key) {
-            try { return sessionStorage.getItem(MAX_KEY + key) === "1"; } catch (e) { return false; }
+            try {
+              var v = sessionStorage.getItem(MAX_KEY + key);
+              return v === null ? null : v === "1";
+            } catch (e) { return null; }
           }
           function setStoredMax(key, max) {
-            try {
-              if (max) sessionStorage.setItem(MAX_KEY + key, "1");
-              else sessionStorage.removeItem(MAX_KEY + key);
-            } catch (e) {}
+            try { sessionStorage.setItem(MAX_KEY + key, max ? "1" : "0"); } catch (e) {}
+          }
+          /* forget the choice entirely, so the default applies again */
+          function clearStoredMax(key) {
+            try { sessionStorage.removeItem(MAX_KEY + key); } catch (e) {}
+          }
+
+          /* phones open maximized: the vertical axis is the scarce one, and a
+             maximized client area keeps the title bar pinned while it scrolls.
+             Same 520px breakpoint the window body drops its padding at. */
+          function maximizedByDefault() {
+            try { return window.matchMedia("(max-width: 520px)").matches; } catch (e) { return false; }
           }
 
           /* a page reload keeps windows the user closed closed; arriving by
@@ -268,7 +282,11 @@ layout: compress
             /* the page window's id changes on every navigation, so remember
                maximize under one shared name and carry it across pagination */
             var maxKey = id.indexOf("page:") === 0 ? "page" : id;
-            if (state !== "closed" && storedMax(maxKey)) state = "maximized";
+            var remembered = storedMax(maxKey);
+            /* an explicit restore wins over the phone default */
+            if (state !== "closed" && (remembered === null ? maximizedByDefault() : remembered)) {
+              state = "maximized";
+            }
             var tx = 0, ty = 0;
 
             function showTask() {
@@ -521,11 +539,15 @@ layout: compress
               setState: function (s) { state = s; apply(); },
               raise: raise,
               open: function () {
-                state = "normal";
+                /* a phone gets the maximized workspace back, not whatever
+                   window this one was last floated in */
+                state = maximizedByDefault() ? "maximized" : "normal";
                 tx = 0; ty = 0;
                 win.style.transform = "";
                 setStoredClosed(id, false);
-                setStoredMax(maxKey, false);
+                /* forget any earlier mark: this is a fresh launch, not the
+                   user choosing how to open it */
+                clearStoredMax(maxKey);
                 apply();
               }
             };
@@ -639,7 +661,7 @@ layout: compress
             /* satellites are transient, so never let a stale close or maximize
                mark from an earlier instance change this fresh one */
             setStoredClosed(id, false);
-            setStoredMax(id, false);
+            clearStoredMax(id);
             satCount++;
             createWindow(win, "sat-" + satCount);
             var newApi = registry[id];
