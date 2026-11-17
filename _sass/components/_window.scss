@@ -342,6 +342,22 @@
   }
 }
 
+/* the desktop page is the wallpaper itself — no window to dodge — so on a phone
+   its shortcuts leave the fixed gutter and lay out as a grid instead */
+@media (max-width: 1199px) {
+  .desk-icons--desktop {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--sp-4);
+    padding: var(--sp-6) var(--sp-4) var(--sp-2);
+  }
+
+  .desk-icons--desktop .desktop-icon {
+    width: 100%;
+  }
+}
+
 @media (max-width: 520px) {
   .window__body {
     padding: var(--sp-5) var(--sp-4);

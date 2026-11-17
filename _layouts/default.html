@@ -21,8 +21,10 @@ layout: compress
 
     <a class="skip-link" href="#main">Skip to content</a>
 
-    {% comment %} desktop shortcuts for the menu items (shown where there's desktop room) {% endcomment %}
-    <div class="desk-icons">
+    {% comment %} desktop shortcuts for the menu items. They sit in the fixed gutter
+       where there's desktop room beside the window; on the desktop page itself there
+       is no window to dodge, so on a phone they become a grid on the wallpaper. {% endcomment %}
+    <div class="desk-icons{% if page.url == '/' %} desk-icons--desktop{% endif %}">
       <a class="desktop-icon" href="{{ '/blog/' | relative_url }}" data-launch-url="{{ '/blog/' | relative_url }}" data-launch-title="Blog">
         <svg aria-hidden="true"><use xlink:href="#icon-folder"></use></svg>
         <span class="desktop-icon__label">Blog</span>
@@ -388,12 +390,31 @@ layout: compress
 
             /* ---- drag by the title bar ---- */
             var dragging = false, startX = 0, startY = 0, baseX = 0, baseY = 0, home = null;
+            var tapAt = 0, tapX = 0, tapY = 0;
+
+            function toggleMax() {
+              state = state === "maximized" ? "normal" : "maximized";
+              /* remember the choice so the next page opens the same way */
+              setStoredMax(maxKey, state === "maximized");
+              apply();
+            }
 
             win.addEventListener("pointerdown", raise, true);
 
             titlebar.addEventListener("pointerdown", function (e) {
-              if (e.button !== 0 || state === "maximized") return;
+              if (e.button !== 0) return;
               if (e.target.closest(".win-btn")) return;
+              /* double-click / double-tap the title bar to maximize / restore
+                 (Win95). The two taps are counted here rather than left to a
+                 dblclick event: touch browsers only synthesize one when the taps
+                 land inside their own short window, which a 27px title bar on a
+                 phone makes hard to hit. */
+              var twice = e.timeStamp - tapAt < 450 &&
+                          Math.abs(e.clientX - tapX) < 40 &&
+                          Math.abs(e.clientY - tapY) < 40;
+              tapAt = e.timeStamp; tapX = e.clientX; tapY = e.clientY;
+              if (twice) { tapAt = 0; toggleMax(); return; }
+              if (state === "maximized") return;
               var r = win.getBoundingClientRect();
               home = { left: r.left - tx, top: r.top - ty, width: r.width };
               dragging = true;
@@ -406,6 +427,9 @@ layout: compress
 
             titlebar.addEventListener("pointermove", function (e) {
               if (!dragging) return;
+              /* a title bar that moved was dragged, not tapped — so it cannot be
+                 the first half of a double-tap */
+              if (Math.abs(e.clientX - startX) > 4 || Math.abs(e.clientY - startY) > 4) tapAt = 0;
               var nx = baseX + (e.clientX - startX);
               var ny = baseY + (e.clientY - startY);
               var wantLeft = home.left + nx;
@@ -430,15 +454,6 @@ layout: compress
             }
             titlebar.addEventListener("pointerup", endDrag);
             titlebar.addEventListener("pointercancel", endDrag);
-
-            /* double-click the title bar to maximize / restore (Win95) */
-            titlebar.addEventListener("dblclick", function (e) {
-              if (e.target.closest(".win-btn")) return;
-              state = state === "maximized" ? "normal" : "maximized";
-              /* remember the choice so the next page opens the same way */
-              setStoredMax(maxKey, state === "maximized");
-              apply();
-            });
 
             /* ---- resize by the edge / corner grips ---- */
             var MIN_W = 320;
