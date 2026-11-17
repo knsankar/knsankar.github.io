@@ -119,6 +119,11 @@ a.btn:visited {
 /* ---- status bar ---- */
 .statusbar {
   display: flex;
+  /* The eight panels add up to more than a phone-width window holds, and the
+     long ones (a post's path, the copyright) cannot shrink below their text.
+     Wrapping moves the surplus onto a second row instead of pushing the whole
+     document into horizontal overflow. */
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 2px;
   padding: 3px;
