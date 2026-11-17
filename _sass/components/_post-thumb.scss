@@ -14,6 +14,7 @@
   background: var(--face);
   color: var(--win-text);
   border: 1px solid var(--field-border);
+  /* still load-bearing: blog.html's empty-state row puts a bare "—" in a tile */
   font-weight: 700;
   font-size: 1.05rem;
   line-height: 1;
@@ -30,6 +31,14 @@
   width: 100%;
   height: 100%;
   object-fit: contain;               /* never crop or distort a thumbnail */
+}
+
+/* the imageless fallback silhouette; its fill is `currentColor`, so it picks up
+   the tile's themed colour and each tint's override with no extra declaration */
+.post-thumb__avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* topic tints — a literal hex pair, matching the `.reading-row__status--*` idiom.
