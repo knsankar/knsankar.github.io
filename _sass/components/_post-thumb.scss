@@ -41,7 +41,7 @@
   height: 100%;
 }
 
-/* topic tints — a literal hex pair, matching the `.reading-row__status--*` idiom.
+/* topic tints — a literal hex pair, matching the `.reading-block__label--*` idiom.
    Adding a topic is one line; unknown topics fall through to the themed default. */
 .post-thumb--postgresql {             /* blue */
   background: #2f74c9;

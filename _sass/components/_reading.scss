@@ -3,7 +3,7 @@
    ============================================================ */
 
 .reading-list .listview__head {
-  grid-template-columns: 60px 1fr 180px 110px;
+  grid-template-columns: 60px 1fr 180px;
 }
 
 .reading-list__items {
@@ -18,7 +18,7 @@
 
 .reading-row {
   display: grid;
-  grid-template-columns: 60px 1fr 180px 110px;
+  grid-template-columns: 60px 1fr 180px;
   color: var(--win-text);
 }
 
@@ -57,31 +57,49 @@
   font-size: .78rem;
 }
 
-.reading-row__status {
-  display: inline-flex;
+/* the block band — the status dot the rows used to carry now labels the group,
+   so a row is three cells instead of four */
+.reading-block__label {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  align-self: center;
-  justify-self: start;
-  margin: 0 8px;
-  padding: 1px 7px;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 8px;
   background: var(--face);
+  border-top: 1px solid var(--bevel-shadow);
+  border-bottom: 1px solid var(--bevel-face);
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  font-weight: 700;
   color: var(--win-text);
-  font-size: .72rem;
-  @include bevel-field;
 }
 
-.reading-row__status::before {
+.reading-block__label::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
   border: 1px solid var(--bevel-shadow);
 }
 
-.reading-row__status--reading::before  { background: #2f74c9; } /* blue   */
-.reading-row__status--queued::before   { background: #e0a800; } /* amber  */
-.reading-row__status--finished::before { background: #3f9c3f; } /* green  */
+/* the three literals are lifted verbatim from the pills these bands replace;
+   `--undated` takes the muted token because "something is missing" is not a category */
+.reading-block__label--reading::before  { background: #2f74c9; } /* blue  */
+.reading-block__label--queued::before   { background: #e0a800; } /* amber */
+.reading-block__label--year::before     { background: #3f9c3f; } /* green */
+.reading-block__label--undated::before  { background: var(--text-muted); }
+
+.reading-block__count {
+  font-size: .66rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* the column header already draws a bottom border in the same colour, so the
+   first band would double it — only the bands below the first draw their own */
+.listview__head + .reading-block .reading-block__label {
+  border-top: 0;
+}
 
 .reading-row--empty {
   display: block;
@@ -93,9 +111,7 @@
 @media (max-width: 520px) {
   .reading-list .listview__head { display: none; }
   .reading-row { grid-template-columns: 60px 1fr; }
-  .reading-row__cover { grid-row: 1 / span 3; }
+  .reading-row__cover { grid-row: 1 / span 2; }
   .reading-row__title,
-  .reading-row__author,
-  .reading-row__status { grid-column: 2; }
-  .reading-row__status { margin: 0 0 6px; }
+  .reading-row__author { grid-column: 2; }
 }
