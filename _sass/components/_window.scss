@@ -246,6 +246,35 @@
   @include bevel-field;
 }
 
+/* Back / Forward, because a satellite frames a real page: following a post
+   navigates inside the frame, where the window's own browser chrome is the
+   only place a way back can live. Disabled at the ends of the trail, greyed
+   the way XP greys a disabled control. */
+.browser-bar__nav {
+  width: 24px;
+  /* stretch to the bar, so the buttons match whatever height the url field
+     beside them happens to be rather than a number kept in two places */
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--win-text);
+  cursor: pointer;
+  @include bevel-raised;
+}
+
+.browser-bar__nav:active {
+  @include bevel-sunken;
+}
+
+.browser-bar__nav:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
 .app-window__frame {
   flex: 1;
   width: 100%;

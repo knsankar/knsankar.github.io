@@ -560,17 +560,61 @@ layout: compress
               '</div>' +
               '<div class="window__body app-window__body">' +
                 '<div class="browser-bar">' +
+                  '<button type="button" class="browser-bar__nav" data-sat-nav="-1" aria-label="Back" title="Back">&#8592;</button>' +
+                  '<button type="button" class="browser-bar__nav" data-sat-nav="1" aria-label="Forward" title="Forward">&#8594;</button>' +
                   '<span class="browser-bar__url"></span>' +
                   '<a class="btn browser-bar__go" target="_blank" rel="noopener noreferrer">Open &#8599;</a>' +
                 '</div>' +
                 '<iframe class="app-window__frame" loading="lazy" referrerpolicy="no-referrer"></iframe>' +
               '</div>';
+            var urlText = win.querySelector(".browser-bar__url");
+            var backBtn = win.querySelector('[data-sat-nav="-1"]');
+            var fwdBtn = win.querySelector('[data-sat-nav="1"]');
             win.querySelector(".titlebar__title").textContent = title;
-            win.querySelector(".browser-bar__url").textContent = path;
             win.querySelector(".browser-bar__go").setAttribute("href", url);
             var fr = win.querySelector("iframe");
             fr.setAttribute("title", title);
             fr.setAttribute("data-frame-src", url + (url.indexOf("?") === -1 ? "?embed=1" : "&embed=1"));
+
+            /* ---- back / forward inside the frame ---------------------------
+               Following a post navigates the frame, not the tab, so the
+               browser's own Back button cannot reach it and the list looked
+               gone until the window was closed and reopened. The framed page
+               is same-origin, so we can read where it landed and walk the
+               trail ourselves. */
+            var trail = [], at = -1;
+            function syncNav() {
+              backBtn.disabled = at <= 0;
+              fwdBtn.disabled = at < 0 || at >= trail.length - 1;
+              urlText.textContent = at >= 0
+                ? new URL(trail[at], window.location.origin).pathname
+                : path;
+            }
+            function note() {
+              var href;
+              try { href = fr.contentWindow.location.href; } catch (e) { return; }
+              if (/^about:/.test(href)) return; /* the blank page a fresh frame starts on */
+              if (at >= 0 && trail[at] === href) return; /* our own step; already counted */
+              trail = trail.slice(0, at + 1);            /* a new click drops any forward entries */
+              trail.push(href);
+              at = trail.length - 1;
+              syncNav();
+            }
+            function go(delta) {
+              var next = at + delta;
+              if (next < 0 || next >= trail.length) return;
+              at = next;
+              syncNav();
+              /* `replace`, not `src`: stepping must not add an entry to the
+                 tab's own history, or the browser's Back button would end up
+                 walking through frame states instead of leaving the page */
+              try { fr.contentWindow.location.replace(trail[at]); }
+              catch (e) { fr.setAttribute("src", trail[at]); }
+            }
+            fr.addEventListener("load", note);
+            backBtn.addEventListener("click", function () { go(-1); });
+            fwdBtn.addEventListener("click", function () { go(1); });
+            syncNav();
             document.body.appendChild(win);
             /* satellites are transient, so never let a stale close or maximize
                mark from an earlier instance change this fresh one */
