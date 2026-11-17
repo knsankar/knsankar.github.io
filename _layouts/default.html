@@ -324,15 +324,17 @@ layout: compress
               var chromeH = win.getBoundingClientRect().height - frame.clientHeight;
               win.style.setProperty("--sat-h", Math.max(240, contentH + chromeH) + "px");
             }
-            /* when a satellite is maximized the frame is taller than the page
-               it shows, so tell the framed page to fill it: its own footer
-               band then sits at the bottom instead of just under the content */
+            /* when a satellite is taller than the page it shows — maximized, or
+               dragged out past the height it was fitted to — tell the framed
+               page to fill the frame: its own footer band then stays at the
+               bottom edge instead of leaving a blank strip under the content */
             function syncFrameFill() {
               if (!satellite || !frame) return;
               var doc;
               try { doc = frame.contentDocument; } catch (e) { return; }
               if (!doc || !doc.documentElement) return;
-              doc.documentElement.classList.toggle("embed-fill", state === "maximized");
+              doc.documentElement.classList.toggle("embed-fill",
+                state === "maximized" || win.classList.contains("window--sized"));
             }
             if (frame) frame.addEventListener("load", function () { fitFrame(); syncFrameFill(); });
 
@@ -464,6 +466,9 @@ layout: compress
                    .wrap container it sits in */
                 maxW = Math.max(MIN_W, window.innerWidth - 8 - r.left);
                 win.classList.add("window--sized", "window--resizing");
+                /* a dragged satellite is no longer sized to its content, so let
+                   the framed page fill the frame while the grip is moving */
+                syncFrameFill();
                 grip.setPointerCapture(e.pointerId);
                 e.preventDefault();
                 e.stopPropagation();
