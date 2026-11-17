@@ -1,18 +1,52 @@
+{%- assign _books = site.data.reading -%}
+{%- comment -%} `size` on nil is 0, so an empty data file lands in the empty branch instead of erroring {%- endcomment -%}
+{%- assign _total = _books | size -%}
+{%- assign _reading = _books | where: "status", "reading" -%}
+{%- assign _queued = _books | where: "status", "queued" -%}
+{%- assign _done = _books | where: "status", "finished" -%}
+{%- comment -%} undated entries are held back before sorting, so no nil year ever reaches `sort` {%- endcomment -%}
+{%- assign _dated = _done | where_exp: "book", "book.year" -%}
+{%- assign _undated = _done | where_exp: "book", "book.year == nil" -%}
+{%- assign _years = _dated | map: "year" | uniq | sort | reverse -%}
 <div class="listview reading-list">
-    <div class="listview__head"><span></span><span>Title</span><span>Author</span><span>Status</span></div>
+    <div class="listview__head"><span></span><span>Title</span><span>Author</span></div>
+    {% if _total > 0 %}
+    {% if _reading.size > 0 %}
+    <section class="reading-block">
+        <h3 class="reading-block__label reading-block__label--reading">Reading now<span class="reading-block__count">{{ _reading.size }}</span></h3>
+        <ul class="reading-list__items">
+            {% for book in _reading %}{% include reading-row.html book=book %}{% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    {% if _queued.size > 0 %}
+    <section class="reading-block">
+        <h3 class="reading-block__label reading-block__label--queued">Up next<span class="reading-block__count">{{ _queued.size }}</span></h3>
+        <ul class="reading-list__items">
+            {% for book in _queued %}{% include reading-row.html book=book %}{% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    {% for _year in _years %}
+    {% assign _group = _dated | where: "year", _year %}
+    <section class="reading-block">
+        <h3 class="reading-block__label reading-block__label--year">{{ _year }}<span class="reading-block__count">{{ _group.size }}</span></h3>
+        <ul class="reading-list__items">
+            {% for book in _group %}{% include reading-row.html book=book %}{% endfor %}
+        </ul>
+    </section>
+    {% endfor %}
+    {% if _undated.size > 0 %}
+    <section class="reading-block">
+        <h3 class="reading-block__label reading-block__label--undated">Undated<span class="reading-block__count">{{ _undated.size }}</span></h3>
+        <ul class="reading-list__items">
+            {% for book in _undated %}{% include reading-row.html book=book %}{% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    {% else %}
     <ul class="reading-list__items">
-        {% for book in site.data.reading %}
-        <li class="reading-row">
-            <span class="reading-row__cover">{% if book.cover %}<img src="{{ book.cover }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% endif %}</span>
-            <span class="reading-row__title">
-                {% if book.url %}<a href="{{ book.url }}" target="_blank" rel="noopener noreferrer">{{ book.title }}</a>{% else %}{{ book.title }}{% endif %}
-                {% if book.note %}<span class="reading-row__note">{{ book.note }}</span>{% endif %}
-            </span>
-            <span class="reading-row__author">{{ book.author }}</span>
-            <span class="reading-row__status reading-row__status--{{ book.status | downcase }}">{{ book.status | capitalize }}</span>
-        </li>
-        {% else %}
         <li class="reading-row reading-row--empty">Nothing on the shelf yet.</li>
-        {% endfor %}
     </ul>
+    {% endif %}
 </div>

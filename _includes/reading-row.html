@@ -1,0 +1,9 @@
+{%- comment -%} one shelf row; every block loop in reading-list.html shares this definition {%- endcomment -%}
+<li class="reading-row">
+    <span class="reading-row__cover">{% if include.book.cover %}<img src="{{ include.book.cover }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% endif %}</span>
+    <span class="reading-row__title">
+        {% if include.book.url %}<a href="{{ include.book.url }}" target="_blank" rel="noopener noreferrer">{{ include.book.title }}</a>{% else %}{{ include.book.title }}{% endif %}
+        {% if include.book.note %}<span class="reading-row__note">{{ include.book.note }}</span>{% endif %}
+    </span>
+    <span class="reading-row__author">{{ include.book.author }}</span>
+</li>

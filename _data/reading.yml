@@ -1,6 +1,8 @@
 # Now Reading — hand-curated shelf.
 # Each entry: title (required), author (required), status (reading|finished|queued),
 # optional url (link to the book), cover (thumbnail image URL) and note (short remark).
+# A finished book wants year (an integer, e.g. 2025) — that is the block it is filed under.
+# Omit year on a finished book and it lands in an "Undated" block at the bottom.
 # Omit cover and the row shows an empty framed slot.
 # Empty list is fine — the site shows "Nothing on the shelf yet."
 - title: "Algorithms to Live By: The Computer Science of Human Decisions"
@@ -21,9 +23,9 @@
 - title: "The Death of Ivan Ilyich"
   author: Leo Tolstoy
   status: finished
+  year: 2025
   url: https://www.goodreads.com/book/show/204879629
   cover: https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1723169986i/204879629._SY180_.jpg
-  note: Read in 2025
 # Example entries:
 # - title: Designing Data-Intensive Applications
 #   author: Martin Kleppmann
